@@ -1,7 +1,12 @@
+import LoginButton from "@/feature/login/login";
 
-
-export default function Home() {
+function Home() {
   return (
-<div>a</div>
+    <div>
+      <h1>ログイン機能サンプル</h1>
+      <LoginButton />
+    </div>
   );
 }
+
+export default Home;

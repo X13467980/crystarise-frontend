@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useState  } from "react";
 
 const LoginButton = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

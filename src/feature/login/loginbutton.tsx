@@ -17,9 +17,9 @@ const LoginButton = () => {
   return (
     <div>
       {isLoggedIn ? (
-        <button onClick={handleLogoutClick}>ログアウト</button>
+        <button onClick={handleLogoutClick} className="primary-btn ">ログアウト</button>
       ) : (
-        <button onClick={handleLoginClick}>ログイン</button>
+        <button onClick={handleLoginClick} className="primary-btn">ログイン</button>
       )}
     </div>
   );

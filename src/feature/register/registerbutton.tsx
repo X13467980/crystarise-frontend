@@ -4,7 +4,7 @@ const RegisterButton = () =>{
     //button only
     return (
         <div>
-            <button >登録</button>
+            <button className="primary-btn mt-2">新規登録</button>
         </div>
     )
 };

@@ -5,6 +5,7 @@ function Home() {
   return (
     <div className ="border flex justify-center items-center h-screen">
       <div className="border w-96 text-center">
+      {/* ここにアイコンかな？ */}
       <h2 className="mt-30">ログイン</h2>
       <LoginButton />
       <h2>新規登録</h2>

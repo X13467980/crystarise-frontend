@@ -1,3 +1,5 @@
+"use client";
+
 const RegisterButton = () =>{
     //button only
     return (

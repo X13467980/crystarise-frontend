@@ -1,5 +1,5 @@
-import LoginButton from "@/feature/login/login";
-import RegisterButton from "@/feature/register/register";
+import LoginButton from "@/feature/login/loginbutton";
+import RegisterButton from "@/feature/register/registerbutton";
 
 function Home() {
   return (

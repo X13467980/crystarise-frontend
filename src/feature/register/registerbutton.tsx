@@ -3,7 +3,9 @@
 const RegisterButton = () =>{
     //button only
     return (
-        <button>登録</button>
+        <div>
+            <button >登録</button>
+        </div>
     )
 };
 export default RegisterButton;

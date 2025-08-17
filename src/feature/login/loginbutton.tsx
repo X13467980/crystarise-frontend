@@ -1,26 +1,31 @@
+
 "use client";
-import React, { useState  } from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 const LoginButton = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   const handleLoginClick = () => {
     setIsLoggedIn(true);
-    console.log("ログインしました");
+
+    router.push("/login");
   };
 
-  const handleLogoutClick = () => {
-    setIsLoggedIn(false);
-    console.log("ログアウトしました");
-  };
+  // const handleLogoutClick = () => {
+  //   setIsLoggedIn(false);
+  //   console.log("ログアウトしました");
+  // };
 
   return (
     <div>
-      {isLoggedIn ? (
+      {/* {isLoggedIn ? (
         <button onClick={handleLogoutClick} className="primary-btn ">ログアウト</button>
-      ) : (
+      ) : ( */}
         <button onClick={handleLoginClick} className="primary-btn">ログイン</button>
-      )}
+      {/* )} */}
     </div>
   );
 };

@@ -6,7 +6,6 @@ function Home() {
   return (
     <div className =" flex justify-center items-center h-screen">
       <div className="border rounded-lg w-96 text-center">
-      {/* ここにアイコンかな？ */}
         <div className="border-b-3 border-b-gray-500">
           <Image
             src="/2530064.png"

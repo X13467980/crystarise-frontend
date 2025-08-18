@@ -4,9 +4,9 @@ import Image from "next/image"
 
 function Home() {
   return (
-  <div className="flex justify-center items-center min-h-screen">
+  <div className="flex justify-center min-h-screen">
     <div>
-      <div className="">
+      <div className="mt-37">
         <Image
           src="/snowflake-icon.svg"
           width={254}

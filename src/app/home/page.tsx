@@ -13,8 +13,8 @@ export default function HomePage() {
       <Header />
       <main className="flex-grow flex items-center justify-center">
         <ProfileCard
-          displayName="John Doe"
-          avatarUrl="/logo.svg"
+          displayName="Example Name"
+          avatarUrl="/vercel.svg"
           soloCount={5}
           teamCount={10}
           badgeCount={3}

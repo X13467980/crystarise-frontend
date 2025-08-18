@@ -23,5 +23,5 @@ body {
 }
 
 .primary-btn {
-  @apply bg-[var(--light-button)] text-[var(--text-color)] text-sm font-normal px-6 py-2 rounded-md active:scale-95 active:shadow-inner hover:bg-blue-500;
+  @apply bg-[var(--light-button)] text-[var(--text-color)] text-sm font-normal px-29 py-5 rounded-md active:scale-95 active:shadow-inner hover:bg-blue-500;
 }

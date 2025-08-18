@@ -2,7 +2,7 @@
 
 import Header from '@/feature/header/Header';
 import ProfileCard from '@/feature/profile/ProfileCard';
-import LoginButton from '@/feature/login/loginbutton';
+import GoLoginButton from '@/feature/gologin/gologinbutton';
 import StartButtons from '@/feature/startbuttons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 
@@ -45,7 +45,7 @@ export default function HomePage() {
         <Header />
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-90">ログインしてください</p>
-          <LoginButton />
+          <GoLoginButton />
           <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
         </main>
       </div>

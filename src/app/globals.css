@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #144895;
+  --text-color: #144895;
   --foreground: #171717;
+  --light-button: #1CE8FF;
 }
 
 @theme inline {
@@ -12,12 +14,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
 
 body {
   background: var(--background);
@@ -26,5 +23,5 @@ body {
 }
 
 .primary-btn {
-  @apply bg-blue-300 text-white px-2 py-3 rounded-lg active:scale-95 active:shadow-inner hover:bg-blue-500;
+  @apply bg-[var(--light-button)] text-[var(--text-color)] text-sm font-normal px-29 py-5 rounded-md active:scale-95 active:shadow-inner hover:bg-blue-500;
 }

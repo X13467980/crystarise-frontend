@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 
-const LoginButton = () => {
+const GoLoginButton = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
@@ -24,10 +24,10 @@ const LoginButton = () => {
       {/* {isLoggedIn ? (
         <button onClick={handleLogoutClick} className="primary-btn ">ログアウト</button>
       ) : ( */}
-        <button onClick={handleLoginClick} className="primary-btn">ログイン</button>
+        <button onClick={handleLoginClick} className="primary-btn ">ログイン</button>
       {/* )} */}
     </div>
   );
 };
 
-export default LoginButton;
+export default GoLoginButton;

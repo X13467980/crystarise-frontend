@@ -1,5 +1,5 @@
-import LoginButton from "@/feature/login/loginbutton";
-import RegisterButton from "@/feature/register/registerbutton";
+import LoginButton from "@/feature/gologin/gologinbutton";
+import RegisterButton from "@/feature/goregister/goregisterbutton";
 import Image from "next/image"
 
 function Home() {
@@ -21,7 +21,7 @@ function Home() {
           alt="Name-icon"
         />
       </div>
-      <div className="text-center mt-2" >
+      <div className="text-center mt-10" >
         <LoginButton />
         <RegisterButton />
       </div>

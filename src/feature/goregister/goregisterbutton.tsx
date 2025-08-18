@@ -2,7 +2,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-const RegisterButton = () => {
+const GoRegisterButton = () => {
     const router = useRouter();
 
     const handleRegisterClick = () => {
@@ -15,4 +15,4 @@ const RegisterButton = () => {
         </div>
     );
 };
-export default RegisterButton;
+export default GoRegisterButton;

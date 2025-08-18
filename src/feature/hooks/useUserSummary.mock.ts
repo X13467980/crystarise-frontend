@@ -9,10 +9,9 @@ export type Summary = {
 };
 
 export function useUserSummaryMock() {
-  // 読み込み演出を入れたい場合は setTimeout などを追加してもOK
   const data: Summary = {
-    displayName: 'ようた',
-    avatarUrl: '/avatar-placeholder.png', // public配下に置く（なければ null でもOK）
+    displayName: 'Example Name',
+    avatarUrl: '/mock-icon.png',
     soloCount: 12,
     teamCount: 5,
     badgeCount: 17,

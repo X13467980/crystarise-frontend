@@ -10,13 +10,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
       <Header />
-      <main className="px-6 pt-6">
+      <main className="flex flex-1 items-center justify-center px-6 py-8">
         <ProfileCard
           displayName={data.displayName}
           avatarUrl={data.avatarUrl}
           soloCount={data.soloCount}
           teamCount={data.teamCount}
           badgeCount={data.badgeCount}
+          className="w-full max-w-md md:max-w-lg"
         />
       </main>
     </div>

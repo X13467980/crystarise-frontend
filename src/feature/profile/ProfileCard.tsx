@@ -21,7 +21,6 @@ export default function ProfileCard({
 }: Props) {
   return (
     <section className={`flex items-center gap-6 ${className}`}>
-      {/* アイコン */}
       {avatarUrl ? (
         <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white/10 shrink-0">
           <Image src={avatarUrl} alt="avatar" fill className="object-cover" />
@@ -29,8 +28,6 @@ export default function ProfileCard({
       ) : (
         <div className="w-24 h-24 rounded-full bg-gray-300/80 shrink-0" />
       )}
-
-      {/* 名前＋メトリクス */}
       <div className="flex flex-col gap-2">
         <h2 className="text-2xl font-semibold tracking-wide">{displayName}</h2>
         <div className="flex gap-8 text-center">

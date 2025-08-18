@@ -1,23 +1,22 @@
 'use client';
 
-import React from 'react';
-import Header from "@/feature/header/Header";
+import Header from '@/feature/header/Header';
 import ProfileCard from '@/feature/profile/ProfileCard';
+import { useUserSummaryMock } from '@/feature/hooks/useUserSummary.mock';
 
 export default function HomePage() {
+  const { data } = useUserSummaryMock();
+
   return (
-    <div
-      className="flex flex-col min-h-screen text-white"
-      style={{ backgroundColor: "#144895" }}
-    >
+    <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
       <Header />
-      <main className="flex-grow flex items-center justify-center">
+      <main className="px-6 pt-6">
         <ProfileCard
-          displayName="Example Name"
-          avatarUrl="/vercel.svg"
-          soloCount={5}
-          teamCount={10}
-          badgeCount={3}
+          displayName={data.displayName}
+          avatarUrl={data.avatarUrl}
+          soloCount={data.soloCount}
+          teamCount={data.teamCount}
+          badgeCount={data.badgeCount}
         />
       </main>
     </div>

@@ -2,7 +2,9 @@
 
 :root {
   --background: #144895;
+  --text-color: #144895;
   --foreground: #171717;
+  --light-button: #1CE8FF;
 }
 
 @theme inline {

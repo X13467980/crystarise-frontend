@@ -17,7 +17,6 @@ export default function HomePage() {
     console.log('みんなで始める clicked');
   };
 
-  // 読み込み中
   if (loading) {
     return (
       <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
@@ -29,7 +28,6 @@ export default function HomePage() {
     );
   }
 
-  // エラー
   if (error) {
     return (
       <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
@@ -41,7 +39,6 @@ export default function HomePage() {
     );
   }
 
-  // 未ログイン or データなし
   if (!data) {
     return (
       <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
@@ -55,7 +52,6 @@ export default function HomePage() {
     );
   }
 
-  // データあり
   return (
     <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
       <Header />

@@ -3,10 +3,8 @@
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  /** クリック時に追加で実行したい処理（遷移は内部で行う） */
   onSoloClick?: () => void;
   onTeamClick?: () => void;
-  /** 遷移先のパス（デフォルト /solo, /team） */
   toSolo?: string;
   toTeam?: string;
   className?: string;
@@ -22,13 +20,13 @@ export default function StartButtons({
   const router = useRouter();
 
   const handleSolo = () => {
-    onSoloClick?.();       // 追加処理（任意）
-    router.push(toSolo);   // 既定は /solo
+    onSoloClick?.();
+    router.push(toSolo);
   };
 
   const handleTeam = () => {
-    onTeamClick?.();       // 追加処理（任意）
-    router.push(toTeam);   // 既定は /team
+    onTeamClick?.();
+    router.push(toTeam);
   };
 
   return (

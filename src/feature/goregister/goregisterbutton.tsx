@@ -11,7 +11,7 @@ const GoRegisterButton = () => {
 
     return (
         <div>
-            <button className="primary-btn mt-2" onClick={handleRegisterClick}>新規登録</button>
+            <button className="primary-btn mt-5" onClick={handleRegisterClick}>新規登録</button>
         </div>
     );
 };

@@ -27,7 +27,7 @@ const RegisterForm: React.FC = () => {
     }
 
     return (
-        <div className="mt-10">
+        <div className="mt-10 w-full max-w-md">
             <form onSubmit={handleSubmit}>
                 <div>
                     <input
@@ -53,7 +53,7 @@ const RegisterForm: React.FC = () => {
                         className="login-input w-full " 
                     />
                 </div>
-                <button type="submit" className="register-btn w-full mt-5">登録</button>
+                <button type="submit" className="primary-btn w-full mt-5">新規登録</button>
             </form>
             <button className="primary-btn w-full mt-5" onClick={goBack}>戻る</button>
         </div>

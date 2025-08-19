@@ -5,8 +5,6 @@ import React, { useState } from 'react';
 
 const RegisterForm: React.FC = () => {
     const [form, setForm] = useState({ username: '', password: '' });
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -14,8 +12,6 @@ const RegisterForm: React.FC = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
-        setSuccess(false);
 
         // TODO: Replace with your registration API call
         try {

@@ -22,7 +22,6 @@ const LoginForm: React.FC = () => {
 
     return (
         <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #ccc', borderRadius: 8 }}>
-            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 16 }}>
                     <label>

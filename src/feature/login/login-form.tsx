@@ -21,7 +21,7 @@ const LoginForm: React.FC = () => {
     };
 
     return (
-        <div style={{ maxWidth: 400, margin: '80px auto', padding: 24, border: '1px solid #ccc', borderRadius: 8 }}>
+        <div className="">
             <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 16 }}>
                     <label>
@@ -32,6 +32,7 @@ const LoginForm: React.FC = () => {
                             onChange={e => setUsername(e.target.value)}
                             style={{ width: '100%', padding: 8, marginTop: 4 }}
                             autoComplete="username"
+                            placeholder="ユーザーID"
                         />
                     </label>
                 </div>
@@ -44,6 +45,7 @@ const LoginForm: React.FC = () => {
                             onChange={e => setPassword(e.target.value)}
                             style={{ width: '100%', padding: 8, marginTop: 4 }}
                             autoComplete="current-password"
+                            placeholder="パスワード"
                         />
                     </label>
                 </div>

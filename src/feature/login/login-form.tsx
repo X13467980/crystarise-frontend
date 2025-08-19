@@ -7,7 +7,7 @@ const LoginForm: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const Router =useRouter()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // Replace with your actual login logic
@@ -20,9 +20,11 @@ const LoginForm: React.FC = () => {
         alert(`${username}としてログインしました。`);
     };
     const handleLoginClick = () =>{
-        const Router =useRouter()
         Router.push("/login")
+    }
 
+    const goBack = () => {
+        Router.push("/")
     }
 
     return (
@@ -50,6 +52,7 @@ const LoginForm: React.FC = () => {
                 </div>
                 <button type="submit" className="primary-btn mt-5 w-full " onClick={handleLoginClick}>ログイン</button>
             </form>
+            <button className="primary-btn w-full mt-5" onClick={goBack}>戻る</button>
         </div>
     );
 };

@@ -1,37 +1,35 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from "next/navigation";
 
 
-const RegisterPage: React.FC = () => {
-    const [form, setForm] = useState({ username: '', email: '', password: '' });
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
-
+const RegisterForm: React.FC = () => {
+    const [form, setForm] = useState({ username: '', password: '' });
+    const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(null);
-        setSuccess(false);
-
         // TODO: Replace with your registration API call
         try {
             // Example: await api.register(form);
-            setSuccess(true);
+            alert("登録成功！")
         } catch (err) {
-            setError('Registration failed. Please try again.');
+            alert("登録失敗です、もう一度やり直してください")
         }
     };
 
+    const goBack = () => {
+        router.push("/")
+    }
+
     return (
-        <div className="register-page" style={{ maxWidth: 400, margin: '0 auto', padding: 24 }}>
-            <h1>Register</h1>
+        <div className="mt-10 w-full max-w-md">
             <form onSubmit={handleSubmit}>
-                <label>
-                    Username
+                <div>
                     <input
                         name="username"
                         type="text"
@@ -39,23 +37,11 @@ const RegisterPage: React.FC = () => {
                         onChange={handleChange}
                         required
                         autoComplete="username"
-                    />
-                </label>
-                <br />
-                <label>
-                    Email
-                    <input
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        required
-                        autoComplete="email"
-                    />
-                </label>
-                <br />
-                <label>
-                    Password
+                        placeholder="ユーザーID"
+                        className="login-input w-full"
+                        />
+                </div>
+                <div className="mt-5">
                     <input
                         name="password"
                         type="password"
@@ -63,15 +49,15 @@ const RegisterPage: React.FC = () => {
                         onChange={handleChange}
                         required
                         autoComplete="new-password"
+                        placeholder="パスワード"
+                        className="login-input w-full " 
                     />
-                </label>
-                <br />
-                <button type="submit">Register</button>
-                {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
-                {success && <div style={{ color: 'green', marginTop: 8 }}>Registration successful!</div>}
+                </div>
+                <button type="submit" className="primary-btn w-full mt-5">新規登録</button>
             </form>
+            <button className="primary-btn w-full mt-5" onClick={goBack}>戻る</button>
         </div>
     );
 };
 
-export default RegisterPage;
+export default RegisterForm;

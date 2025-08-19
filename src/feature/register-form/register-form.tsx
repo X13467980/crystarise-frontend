@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 
 const RegisterForm: React.FC = () => {
-    const [form, setForm] = useState({ username: '', email: '', password: '' });
+    const [form, setForm] = useState({ username: '', password: '' });
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 

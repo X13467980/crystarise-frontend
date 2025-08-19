@@ -1,18 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from "next/navigation";
 
 
 const RegisterForm: React.FC = () => {
     const [form, setForm] = useState({ username: '', password: '' });
-
+    const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         // TODO: Replace with your registration API call
         try {
             // Example: await api.register(form);
@@ -21,6 +21,10 @@ const RegisterForm: React.FC = () => {
             alert("登録失敗です、もう一度やり直してください")
         }
     };
+
+    const goBack = () => {
+        router.push("/")
+    }
 
     return (
         <div className="mt-10">
@@ -51,6 +55,7 @@ const RegisterForm: React.FC = () => {
                 </div>
                 <button type="submit" className="primary-btn w-full mt-5">登録</button>
             </form>
+            <button className="primary-btn w-full mt-5" onClick={goBack}>戻る</button>
         </div>
     );
 };

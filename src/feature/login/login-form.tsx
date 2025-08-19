@@ -12,7 +12,7 @@ const LoginForm: React.FC = () => {
         setError('');
         // Replace with your actual login logic
         if (!username || !password) {
-            setError('Please enter both username and password.');
+            setError('ユーザーIDとパスワードを入力してください');
             return;
         }
         // Example: call your API here

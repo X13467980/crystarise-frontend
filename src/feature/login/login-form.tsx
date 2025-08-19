@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
                     />
                 </div>
                 {error && <div style={{ color: 'red', marginBottom: 16 }}>{error}</div>}
-                <button type="submit" style={{ width: '100%', padding: 10 }}>Login</button>
+                <button type="submit" style={{ width: '100%', padding: 10 }}>ログイン</button>
             </form>
         </div>
     );

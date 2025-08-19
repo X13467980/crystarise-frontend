@@ -27,8 +27,9 @@ const RegisterForm: React.FC = () => {
     };
 
     return (
-        <div className="register-page" style={{ maxWidth: 400, margin: '0 auto', padding: 24 }}>
+        <div className="mt-10">
             <form onSubmit={handleSubmit}>
+                <div>
                     <input
                         name="username"
                         type="text"
@@ -39,7 +40,9 @@ const RegisterForm: React.FC = () => {
                         placeholder="ユーザーID"
                         className="login-input w-full"
                         />
-                    <input 
+                </div>
+                <div className="mt-5">
+                    <input
                         name="password"
                         type="password"
                         value={form.password}
@@ -47,8 +50,9 @@ const RegisterForm: React.FC = () => {
                         required
                         autoComplete="new-password"
                         placeholder="パスワード"
-                        className="login-input w-full mt-5" 
+                        className="login-input w-full " 
                     />
+                </div>
                 <button type="submit" className="primary-btn w-full mt-5">登録</button>
             </form>
         </div>

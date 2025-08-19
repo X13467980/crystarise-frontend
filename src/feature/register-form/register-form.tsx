@@ -49,7 +49,7 @@ const RegisterForm: React.FC = () => {
                         placeholder="パスワード"
                         className="login-input w-full mt-5" 
                     />
-                <button type="submit" className="primary-btn w-full mt-5">Register</button>
+                <button type="submit" className="primary-btn w-full mt-5">登録</button>
             </form>
         </div>
     );

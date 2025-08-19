@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 
-const RegisterPage: React.FC = () => {
+const RegisterForm: React.FC = () => {
     const [form, setForm] = useState({ username: '', email: '', password: '' });
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -74,4 +74,4 @@ const RegisterPage: React.FC = () => {
     );
 };
 
-export default RegisterPage;
+export default RegisterForm;

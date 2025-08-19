@@ -24,30 +24,24 @@ const LoginForm: React.FC = () => {
         <div className="">
             <form onSubmit={handleSubmit}>
                 <div style={{ marginBottom: 16 }}>
-                    <label>
-                        Username
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            style={{ width: '100%', padding: 8, marginTop: 4 }}
-                            autoComplete="username"
-                            placeholder="ユーザーID"
-                        />
-                    </label>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                        style={{ width: '100%', padding: 8, marginTop: 4 }}
+                        autoComplete="username"
+                        placeholder="ユーザーID"
+                    />
                 </div>
                 <div style={{ marginBottom: 16 }}>
-                    <label>
-                        Password
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            style={{ width: '100%', padding: 8, marginTop: 4 }}
-                            autoComplete="current-password"
-                            placeholder="パスワード"
-                        />
-                    </label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        style={{ width: '100%', padding: 8, marginTop: 4 }}
+                        autoComplete="current-password"
+                        placeholder="パスワード"
+                    />
                 </div>
                 {error && <div style={{ color: 'red', marginBottom: 16 }}>{error}</div>}
                 <button type="submit" style={{ width: '100%', padding: 10 }}>Login</button>

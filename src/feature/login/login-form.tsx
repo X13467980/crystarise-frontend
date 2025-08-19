@@ -21,30 +21,30 @@ const LoginForm: React.FC = () => {
     };
 
     return (
-        <div className="">
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: 16 }}>
-                    <input
+        <div className="mt-10">
+            <form onSubmit={handleSubmit} >
+                <div >
+                    <input 
+                        className="login-input w-full"
                         type="text"
                         value={username}
                         onChange={e => setUsername(e.target.value)}
-                        style={{ width: '100%', padding: 8, marginTop: 4 }}
                         autoComplete="username"
                         placeholder="ユーザーID"
                     />
                 </div>
-                <div style={{ marginBottom: 16 }}>
+                <div className="mt-5">
                     <input
+                        className="login-input w-full"
                         type="password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        style={{ width: '100%', padding: 8, marginTop: 4 }}
                         autoComplete="current-password"
                         placeholder="パスワード"
                     />
                 </div>
                 {error && <div style={{ color: 'red', marginBottom: 16 }}>{error}</div>}
-                <button type="submit" style={{ width: '100%', padding: 10 }}>ログイン</button>
+                <button type="submit" className="primary-btn mt-5 w-full ">ログイン</button>
             </form>
         </div>
     );

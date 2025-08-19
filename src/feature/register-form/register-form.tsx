@@ -53,7 +53,7 @@ const RegisterForm: React.FC = () => {
                         className="login-input w-full " 
                     />
                 </div>
-                <button type="submit" className="primary-btn w-full mt-5">登録</button>
+                <button type="submit" className="register-btn w-full mt-5">登録</button>
             </form>
             <button className="primary-btn w-full mt-5" onClick={goBack}>戻る</button>
         </div>

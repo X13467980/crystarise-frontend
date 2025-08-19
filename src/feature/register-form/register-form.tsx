@@ -20,9 +20,9 @@ const RegisterForm: React.FC = () => {
         // TODO: Replace with your registration API call
         try {
             // Example: await api.register(form);
-            setSuccess(true);
+            alert("登録成功！")
         } catch (err) {
-            setError('Registration failed. Please try again.');
+            alert("登録失敗です、もう一度やり直してください")
         }
     };
 
@@ -30,8 +30,6 @@ const RegisterForm: React.FC = () => {
         <div className="register-page" style={{ maxWidth: 400, margin: '0 auto', padding: 24 }}>
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
-                <label>
-                    Username
                     <input
                         name="username"
                         type="text"
@@ -39,23 +37,8 @@ const RegisterForm: React.FC = () => {
                         onChange={handleChange}
                         required
                         autoComplete="username"
-                    />
-                </label>
-                <br />
-                <label>
-                    Email
-                    <input
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        required
-                        autoComplete="email"
-                    />
-                </label>
-                <br />
-                <label>
-                    Password
+                        placeholder="ユーザーID"
+                        />
                     <input
                         name="password"
                         type="password"
@@ -63,12 +46,9 @@ const RegisterForm: React.FC = () => {
                         onChange={handleChange}
                         required
                         autoComplete="new-password"
+                        placeholder="パスワード"
                     />
-                </label>
-                <br />
                 <button type="submit">Register</button>
-                {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
-                {success && <div style={{ color: 'green', marginTop: 8 }}>Registration successful!</div>}
             </form>
         </div>
     );

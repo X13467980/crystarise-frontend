@@ -1,91 +1,55 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useAuth } from './useAuth';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
-export type UserSummary = {
-  displayName: string;
-  avatarUrl?: string | null;
-  soloCount: number;
-  teamCount: number;
-  badgeCount: number;
-};
-
-type ApiProfile = {
-  display_name: string;
-  avatar_url?: string | null;
-  solo_count: number;
-  team_count: number;
-  badge_count: number;
-  [k: string]: unknown;
-};
-
 export function useUserSummary() {
-  const [data, setData] = useState<UserSummary | null>(null);
+  const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { token, logout } = useAuth();
+
   useEffect(() => {
-    let aborted = false;
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
-    (async () => {
+    const fetchProfile = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
-        const token = typeof window !== 'undefined'
-          ? localStorage.getItem('access_token')
-          : null;
-
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-
         const res = await fetch(`${API_BASE}/me/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-
         const json = await res.json();
 
         if (!res.ok) {
-          // 401/404などは未ログイン or プロファイル未作成として扱う
-          if (!aborted) {
-            setError(
-              typeof json?.detail === 'string'
-                ? json.detail
-                : 'プロフィールの取得に失敗しました'
-            );
-            // 401は未ログイン扱いにしたいなら、ここで setError(null) してもOK
+          // トークンが無効なら削除してログアウト
+          if (res.status === 401 || res.status === 404) {
+            logout();
+            return;
           }
-          return;
+          throw new Error(json?.detail ?? 'プロフィール取得に失敗しました');
         }
 
-        const p = json as ApiProfile;
-
-        const mapped: UserSummary = {
-          displayName: p.display_name,
-          avatarUrl: p.avatar_url ?? null,
-          soloCount: p.solo_count ?? 0,
-          teamCount: p.team_count ?? 0,
-          badgeCount: p.badge_count ?? 0,
-        };
-
-        if (!aborted) setData(mapped);
+        setData({
+          displayName: json.display_name,
+          avatarUrl: json.avatar_url,
+          soloCount: json.solo_count,
+          teamCount: json.team_count,
+          badgeCount: json.badge_count,
+        });
       } catch (e: any) {
-        if (!aborted) setError(e?.message ?? '予期せぬエラーが発生しました');
+        setError(e.message);
       } finally {
-        if (!aborted) setLoading(false);
+        setLoading(false);
       }
-    })();
-
-    return () => {
-      aborted = true;
     };
-  }, []);
+
+    fetchProfile();
+  }, [token, logout]);
 
   return { data, loading, error };
 }

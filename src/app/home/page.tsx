@@ -5,6 +5,7 @@ import ProfileCard from '@/feature/profile/ProfileCard';
 import GoLoginButton from '@/feature/gologin/gologinbutton';
 import StartButtons from '@/feature/startbuttons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
+import LogoutButton from '@/feature/logout/LogoutButton';
 
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
@@ -19,7 +20,7 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
+      <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
         <Header />
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-80">Loading...</p>
@@ -30,7 +31,7 @@ export default function HomePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
+      <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
         <Header />
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="text-red-300">Error: {error}</p>
@@ -41,7 +42,7 @@ export default function HomePage() {
 
   if (!data) {
     return (
-      <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
+      <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
         <Header />
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-90">ログインしてください</p>
@@ -53,7 +54,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen text-white" style={{ backgroundColor: '#144895' }}>
+    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
       <Header />
       <main className="flex flex-col flex-1 items-center justify-center px-6 py-8 gap-8">
         <ProfileCard
@@ -66,6 +67,13 @@ export default function HomePage() {
         />
         <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
       </main>
+
+      {/* ログイン時のみ右下にログアウトボタンを表示 */}
+      {data && (
+        <div className="fixed bottom-5 right-5">
+          <LogoutButton className="px-3 py-2 text-sm" />
+        </div>
+      )}
     </div>
   );
 }

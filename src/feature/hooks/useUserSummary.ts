@@ -1,101 +1,91 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
-// 可能なら: import { Database } from '@/lib/supabase/types'; // 自動生成型
 
-type Summary = {
+import { useEffect, useState } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
+
+export type UserSummary = {
   displayName: string;
-  avatarUrl: string | null;
+  avatarUrl?: string | null;
   soloCount: number;
   teamCount: number;
   badgeCount: number;
 };
 
+type ApiProfile = {
+  display_name: string;
+  avatar_url?: string | null;
+  solo_count: number;
+  team_count: number;
+  badge_count: number;
+  // 余分な項目が来ても無視
+  [k: string]: unknown;
+};
+
 export function useUserSummary() {
-  const [data, setData] = useState<Summary | null>(null);
+  const [data, setData] = useState<UserSummary | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError]   = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let mounted = true;
+    let aborted = false;
 
-    const load = async () => {
+    (async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const { data: userRes } = await supabase.auth.getUser();
-        const user = userRes?.user ?? null;
-        if (!user) {
-          if (mounted) {
-            setData(null);
+        const token = typeof window !== 'undefined'
+          ? localStorage.getItem('access_token')
+          : null;
+
+        if (!token) {
+          // 未ログイン扱い（dataはnullのまま）
+          setLoading(false);
+          return;
+        }
+
+        const res = await fetch(`${API_BASE}/me/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const json = await res.json();
+
+        if (!res.ok) {
+          // 401/404などは未ログイン or プロファイル未作成として扱う
+          if (!aborted) {
+            setError(
+              typeof json?.detail === 'string'
+                ? json.detail
+                : 'プロフィールの取得に失敗しました'
+            );
+            // 401は未ログイン扱いにしたいなら、ここで setError(null) してもOK
           }
           return;
         }
 
-        // profiles は無い可能性もあるので maybeSingle + fallback
-        const { data: profile, error: pErr } = await supabase
-          .from('profiles')
-          .select('display_name, avatar_url')
-          .eq('id', user.id)
-          .maybeSingle();
+        const p = json as ApiProfile;
 
-        if (pErr && pErr.code !== 'PGRST116') { // not found以外は投げる
-          throw pErr;
-        }
+        const mapped: UserSummary = {
+          displayName: p.display_name,
+          avatarUrl: p.avatar_url ?? null,
+          soloCount: p.solo_count ?? 0,
+          teamCount: p.team_count ?? 0,
+          badgeCount: p.badge_count ?? 0,
+        };
 
-        const [solo, team, total] = await Promise.all([
-          supabase
-            .from('crystals')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id)
-            .eq('mode', 'solo'),
-          supabase
-            .from('crystals')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id)
-            .eq('mode', 'team'),
-          supabase
-            .from('crystals')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id),
-        ]);
-
-        if (!mounted) return;
-
-        setData({
-          displayName:
-            profile?.display_name ??
-            (user.user_metadata?.name as string | undefined) ??
-            'ゲスト',
-          avatarUrl:
-            profile?.avatar_url ??
-            (user.user_metadata?.avatar_url as string | null) ??
-            null,
-          soloCount: solo.count ?? 0,
-          teamCount: team.count ?? 0,
-          badgeCount: total.count ?? 0,
-        });
+        if (!aborted) setData(mapped);
       } catch (e: any) {
-        if (!mounted) return;
-        setError(e?.message ?? 'failed to load');
-        setData(null);
+        if (!aborted) setError(e?.message ?? '予期せぬエラーが発生しました');
       } finally {
-        if (mounted) setLoading(false);
+        if (!aborted) setLoading(false);
       }
-    };
-
-    // 初回ロード
-    load();
-
-    // 認証状態の変化に追従
-    const { data: sub } = supabase.auth.onAuthStateChange(() => {
-      load();
-    });
+    })();
 
     return () => {
-      mounted = false;
-      sub.subscription.unsubscribe();
+      aborted = true;
     };
   }, []);
 

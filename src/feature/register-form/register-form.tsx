@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 
 const RegisterForm: React.FC = () => {
-    const [form, setForm] = useState({ username: '', password: '' });
+    const [form, setForm] = useState({ email: '', password: '' });
     const router = useRouter();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,13 +31,13 @@ const RegisterForm: React.FC = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <input
-                        name="username"
+                        name="email"
                         type="text"
-                        value={form.username}
+                        value={form.email}
                         onChange={handleChange}
                         required
-                        autoComplete="username"
-                        placeholder="ユーザーID"
+                        autoComplete="email"
+                        placeholder="メールアドレス"
                         className="login-input w-full"
                         />
                 </div>

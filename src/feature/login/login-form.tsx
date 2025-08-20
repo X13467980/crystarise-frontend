@@ -46,7 +46,7 @@ const LoginForm: React.FC = () => {
       }
 
       // 成功後に遷移（例：トップやダッシュボード）
-      router.push('/');
+      router.push('/home');
     } catch (err: any) {
       setError(err?.message ?? 'ログインに失敗しました。時間をおいて再度お試しください。');
     } finally {

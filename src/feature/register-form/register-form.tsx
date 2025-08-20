@@ -41,7 +41,7 @@ const RegisterForm: React.FC = () => {
 
       alert(data?.message ?? '登録に成功しました。確認メールをチェックしてください。');
       // ここでログインページなどに遷移
-      router.push('/login');
+      router.push('/home');
     } catch (err: any) {
       setErrMsg(err?.message ?? '登録に失敗しました。もう一度お試しください。');
     } finally {

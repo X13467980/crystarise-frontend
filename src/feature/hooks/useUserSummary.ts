@@ -18,7 +18,6 @@ type ApiProfile = {
   solo_count: number;
   team_count: number;
   badge_count: number;
-  // 余分な項目が来ても無視
   [k: string]: unknown;
 };
 
@@ -40,7 +39,6 @@ export function useUserSummary() {
           : null;
 
         if (!token) {
-          // 未ログイン扱い（dataはnullのまま）
           setLoading(false);
           return;
         }

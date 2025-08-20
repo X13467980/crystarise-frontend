@@ -68,8 +68,6 @@ export default function HomePage() {
         <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
       </main>
 
-      {/* ログイン時のみ中央下にログアウトボタンを表示 */}
-      {/* ログイン時のみ中央下にログアウトボタンを表示 */}
       {data && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
           <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />

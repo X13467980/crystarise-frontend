@@ -4,20 +4,20 @@ import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
 
 const LoginForm: React.FC = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const Router =useRouter()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         // Replace with your actual login logic
-        if (!username || !password) {
-            alert("ユーザーIDとパスワードを入力してください。")
+        if (!email || !password) {
+            alert("メールアドレスとパスワードを入力してください。")
             return;
         }
         // Example: call your API here
         // await login(username, password);
-        alert(`${username}としてログインしました。`);
+        alert(`${email}としてログインしました。`);
     };
     const handleLoginClick = () =>{
         Router.push("/login")
@@ -34,10 +34,10 @@ const LoginForm: React.FC = () => {
                     <input 
                         className="login-input w-full"
                         type="text"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)}
-                        autoComplete="username"
-                        placeholder="ユーザーID"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        autoComplete="email"
+                        placeholder="メールアドレス"
                     />
                 </div>
                 <div className="mt-5">

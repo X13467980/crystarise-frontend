@@ -28,30 +28,36 @@ export default function StartButtons({
     <div className={`flex flex-col md:flex-row gap-4 w-full max-w-md ${className}`}>
       <button
         onClick={handleFirst}
-        className="flex-1 justify-center items-center py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
+        className="flex-1 flex flex-col justify-center items-center py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
         style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
         aria-label="初めから"
       >
+      <div className="h-24">
         <Image
           src="/gofirst.svg"
           width={100}
           height={100}
           alt="GoFirstImg"
         />
-        <span>初めから</span>
+      </div>
+        <span >初めから</span>
       </button>
 
       <button
         onClick={handleContinue}
-        className="flex-1 py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
+        className="flex-1 flex flex-col justify-center items-center py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
         style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
         aria-label="続きから"
       >
+      <div className="h-24">
         <Image
           src="/recycle.svg"
           width={70}
           height={70}
+          alt="recycle"
+          className="mt-4"
         />
+      </div>
         <span>続きから</span>
       </button>
     </div>

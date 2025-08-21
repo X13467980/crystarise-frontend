@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from "next/image"
 
 type Props = {
   toFirst?: string;
@@ -27,20 +28,31 @@ export default function StartButtons({
     <div className={`flex flex-col md:flex-row gap-4 w-full max-w-md ${className}`}>
       <button
         onClick={handleFirst}
-        className="flex-1 py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
-        style={{ backgroundColor: '#1CE8FF', color: '#144895' }}
-        aria-label=""
+        className="flex-1 justify-center items-center py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
+        style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
+        aria-label="初めから"
       >
-        ひとりで始める
+        <Image
+          src="/gofirst.svg"
+          width={100}
+          height={100}
+          alt="GoFirstImg"
+        />
+        <span>初めから</span>
       </button>
 
       <button
         onClick={handleContinue}
         className="flex-1 py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
-        style={{ backgroundColor: '#1CE8FF', color: '#144895' }}
-        aria-label="みんなで始める"
+        style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
+        aria-label="続きから"
       >
-        みんなで始める
+        <Image
+          src="/recycle.svg"
+          width={70}
+          height={70}
+        />
+        <span>続きから</span>
       </button>
     </div>
   );

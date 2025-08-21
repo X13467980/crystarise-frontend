@@ -40,12 +40,12 @@ export default function StartButtons({
           alt="GoFirstImg"
         />
       </div>
-        <span >初めから</span>
+        <span className="font-mkpop font-normal text-xl">初めから</span>
       </button>
 
       <button
         onClick={handleContinue}
-        className="flex-1 flex flex-col justify-center items-center py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
+        className="flex-1 flex flex-col justify-center items-center py-4 rounded-xl shadow hover:opacity-90 transition"
         style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
         aria-label="続きから"
       >
@@ -58,7 +58,7 @@ export default function StartButtons({
           className="mt-4"
         />
       </div>
-        <span>続きから</span>
+        <span className="font-mkpop font-normal text-xl">続きから</span>
       </button>
     </div>
   );

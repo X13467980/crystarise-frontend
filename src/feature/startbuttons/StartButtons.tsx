@@ -25,41 +25,40 @@ export default function StartButtons({
   };
 
   return (
-    <div className={`flex flex-col md:flex-row gap-4 w-full max-w-md ${className}`}>
-      <button
-        onClick={handleFirst}
-        className="flex-1 flex flex-col justify-center items-center py-4 rounded-xl font-semibold shadow hover:opacity-90 transition"
-        style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
-        aria-label="初めから"
-      >
-      <div className="h-24">
+<div className={`flex flex-row gap-4 flex-wrap justify-center ${className}`}>
+  <button
+    onClick={handleFirst}
+    className="min-w-[120px] px-4 py-3 rounded-xl font-semibold shadow hover:opacity-90 transition"
+    style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
+    aria-label="初めから"
+  >
+      <div className="h-20 flex items-center justify-center">
         <Image
           src="/gofirst.svg"
-          width={100}
-          height={100}
+          width={80}
+          height={80}
           alt="GoFirstImg"
         />
       </div>
-        <span className="font-mkpop font-normal text-xl">初めから</span>
-      </button>
+      <span className="font-mkpop font-normal text-lg">初めから</span>
+  </button>
 
-      <button
-        onClick={handleContinue}
-        className="flex-1 flex flex-col justify-center items-center py-4 rounded-xl shadow hover:opacity-90 transition"
-        style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
-        aria-label="続きから"
-      >
-      <div className="h-24">
+  <button
+    onClick={handleContinue}
+    className="min-w-[120px] px-4 py-3 rounded-xl font-semibold shadow hover:opacity-90 transition"
+    style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
+    aria-label="続きから"
+  >
+      <div className="h-20 flex items-center justify-center">
         <Image
           src="/recycle.svg"
-          width={70}
-          height={70}
+          width={60}
+          height={60}
           alt="recycle"
-          className="mt-4"
         />
       </div>
-        <span className="font-mkpop font-normal text-xl">続きから</span>
-      </button>
-    </div>
+      <span className="font-mkpop font-normal text-lg">続きから</span>
+  </button>
+</div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useAuth } from '@/feature/hooks/useAuth';
+import { useAuth } from '@/feature/Hooks/useAuth';
 
 type Props = {
   className?: string;

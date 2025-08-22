@@ -1,5 +1,5 @@
-import GoLoginButton from "@/feature/gologin/gologinbutton";
-import GoRegisterButton from "@/feature/goregister/goregisterbutton";
+import GoLoginButton from "@/feature/GoLogin/gologinbutton";
+import GoRegisterButton from "@/feature/GoRegister/goregisterbutton";
 import Image from "next/image"
 
 function Home() {

@@ -4,11 +4,11 @@ import Header from '@/feature/Header/Header';
 import ProfileCard from '@/feature/Profile/ProfileCard';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
-import RoomTypeChooseBtn from '@/feature/RoomTypeChooseBtn.tsx/RoomTypeChooseBtn';
+import TeamRoomChoiceBtn from '@/feature/TeamRoomChoiceBtn/TeamRoomChoiceBtn';
 import LogoutButton from '@/feature/Logout/LogoutButton';
 import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
 
-export default function HomePage() {
+export default function TeamRoomChoice() {
   const { data, loading, error } = useUserSummary();
 
   if (loading) {
@@ -61,7 +61,7 @@ export default function HomePage() {
         <CrystalText
         className="mt-18"
         />
-        <RoomTypeChooseBtn />
+        <TeamRoomChoiceBtn />
       </main>
       </div>
       {data && (

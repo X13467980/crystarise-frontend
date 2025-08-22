@@ -7,6 +7,7 @@ import StartButtons from '@/feature/StartButtons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/Logout/LogoutButton';
 import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
+
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
 

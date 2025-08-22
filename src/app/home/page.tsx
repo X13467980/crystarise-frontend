@@ -6,17 +6,10 @@ import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
 import StartButtons from '@/feature/StartButtons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/Logout/LogoutButton';
+import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
 
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
-
-  const handleSolo = () => {
-    console.log('一人で始める clicked');
-  };
-
-  const handleTeam = () => {
-    console.log('みんなで始める clicked');
-  };
 
   if (loading) {
     return (
@@ -47,7 +40,7 @@ export default function HomePage() {
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-90">ログインしてください</p>
           <GoLoginButton />
-          <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
+          <StartButtons />
         </main>
       </div>
     );
@@ -56,7 +49,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
       <Header />
-      <main className="flex flex-col flex-1 items-center justify-center px-6 py-8 gap-8">
+      <div className="flex justify-center">
+        <main className="flex flex-col flex-1 items-center justify-center max-w-98 gap-8">
         <ProfileCard
           displayName={data.displayName}
           avatarUrl={data.avatarUrl}
@@ -65,9 +59,12 @@ export default function HomePage() {
           badgeCount={data.badgeCount}
           className="w-full max-w-md md:max-w-lg"
         />
-        <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
+        <CrystalText
+        className="mt-18"
+        />
+        <StartButtons />
       </main>
-
+      </div>
       {data && (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
           <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />

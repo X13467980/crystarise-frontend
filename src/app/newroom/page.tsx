@@ -6,11 +6,11 @@ import GoLoginButton from '@/feature/gologin/gologinbutton';
 import StartButtons from '@/feature/startbuttons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/logout/LogoutButton';
-import NewRoomInput from '@/feature/newroom-input/newroom-input';
+import NewRoomInput from '@/feature/NewRoomInput/NewRoomInput';
 
 import React, { useState } from 'react';
-import NewRoomGoal from '@/feature/newroomgoal/newroom-goal';
-import NewRoomButton from '@/feature/newroombutton/newroombutton';
+import NewRoomGoal from '@/feature/NewRoomGoal/NewRoomGoal';
+import NewRoomButton from '@/feature/NewRoomButton/NewRoomButton';
 
 export default function NewRoomPage() {
     const [roomName, setRoomName] = useState('');

@@ -1,13 +1,12 @@
 'use client';
 
-import Header from '@/feature/Header/Header';
-import ProfileCard from '@/feature/Profile/ProfileCard';
-import { useUserSummary } from '@/feature/Hooks/useUserSummary';
-import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
-import RoomTypeChooseBtn from '@/feature/RoomTypeChooseBtn.tsx/RoomTypeChooseBtn';
-import LogoutButton from '@/feature/Logout/LogoutButton';
-import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
-
+import Header from '@/feature/header/Header';
+import ProfileCard from '@/feature/profile/ProfileCard';
+import { useUserSummary } from '@/feature/hooks/useUserSummary';
+import GoLoginButton from '@/feature/gologin/gologinbutton';
+import RoomTypeChooseBtn from '@/feature/roomtypechoosebtn.tsx/roomtypechoosebtn';
+import LogoutButton from '@/feature/logout/LogoutButton';
+import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
 

@@ -1,55 +1,41 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useApi } from '@/lib/swr';
 import { useAuth } from './useAuth';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
+type UserSummary = {
+  display_name: string;
+  avatar_url?: string;
+  solo_count: number;
+  team_count: number;
+  badge_count: number;
+};
 
 export function useUserSummary() {
-  const [data, setData] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated, logout } = useAuth();
 
-  const { token, logout } = useAuth();
+  // 認証前はキーnullでリクエスト自体を発火しない
+  const { data, error, isLoading, mutate } = useApi<UserSummary>(
+    isAuthenticated ? '/me/profile' : null
+  );
 
-  useEffect(() => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+  // 認証エラー（401/404）はログアウトへ
+  if (error?.status === 401 || error?.status === 404) {
+    logout(); // ログイン画面へ遷移
+  }
 
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/me/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const json = await res.json();
-
-        if (!res.ok) {
-          // トークンが無効なら削除してログアウト
-          if (res.status === 401 || res.status === 404) {
-            logout();
-            return;
-          }
-          throw new Error(json?.detail ?? 'プロフィール取得に失敗しました');
+  return {
+    data: data
+      ? {
+          displayName: data.display_name,
+          avatarUrl: data.avatar_url,
+          soloCount: data.solo_count,
+          teamCount: data.team_count,
+          badgeCount: data.badge_count,
         }
-
-        setData({
-          displayName: json.display_name,
-          avatarUrl: json.avatar_url,
-          soloCount: json.solo_count,
-          teamCount: json.team_count,
-          badgeCount: json.badge_count,
-        });
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [token, logout]);
-
-  return { data, loading, error };
+      : null,
+    loading: isLoading,
+    error: error ? (error as Error).message : null,
+    refresh: mutate,
+  };
 }

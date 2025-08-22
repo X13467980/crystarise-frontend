@@ -6,17 +6,10 @@ import GoLoginButton from '@/feature/gologin/gologinbutton';
 import StartButtons from '@/feature/startbuttons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/logout/LogoutButton';
+import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
 
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
-
-  const handleSolo = () => {
-    console.log('一人で始める clicked');
-  };
-
-  const handleTeam = () => {
-    console.log('みんなで始める clicked');
-  };
 
   if (loading) {
     return (
@@ -47,7 +40,7 @@ export default function HomePage() {
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-90">ログインしてください</p>
           <GoLoginButton />
-          <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
+          <StartButtons />
         </main>
       </div>
     );
@@ -65,7 +58,10 @@ export default function HomePage() {
           badgeCount={data.badgeCount}
           className="w-full max-w-md md:max-w-lg"
         />
-        <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
+        <CrystalText
+        className="mt-18"
+        />
+        <StartButtons />
       </main>
 
       {data && (

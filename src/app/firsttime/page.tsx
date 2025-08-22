@@ -3,10 +3,10 @@
 import Header from '@/feature/Header/Header';
 import ProfileCard from '@/feature/Profile/ProfileCard';
 import { useUserSummary } from '@/feature/Hooks/useUserSummary';
-import GoLoginButton from '@/feature/GoLogin/gologinbutton';
+import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
 import RoomTypeChooseBtn from '@/feature/RoomTypeChooseBtn.tsx/roomtypechoosebtn';
 import LogoutButton from '@/feature/Logout/LogoutButton';
-import CrystalText from '@/feature/CrystalGrowText/crystalgrowtext';
+import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
 
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();

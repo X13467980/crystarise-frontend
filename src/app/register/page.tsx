@@ -1,4 +1,4 @@
-import RegisterForm from '@/feature/Register-Form/register-form';
+import RegisterForm from '@/feature/RegisterForm/RegisterForm';
 import Image from "next/image"
 
 const RegisterPage = () => {

@@ -3,7 +3,7 @@
 import Header from '@/feature/header/Header';
 import ProfileCard from '@/feature/profile/ProfileCard';
 import GoLoginButton from '@/feature/gologin/gologinbutton';
-import StartButtons from '@/feature/startbuttons/StartButtons';
+import StartButtons from '@/feature/StartButtons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/logout/LogoutButton';
 import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';

@@ -29,7 +29,7 @@ export default function ProfileCard({
         <div className="w-24 h-24 rounded-full bg-gray-300/80 shrink-0" />
       )}
       <div className="flex flex-col gap-2">
-        <h2 className="text-2xl font-semibold tracking-wide">{displayName}</h2>
+        <h2 className="font-mkpop text-2xl tracking-wide">{displayName}</h2>
         <div className="flex gap-8 text-center">
           <div>
             <div className="text-3xl font-bold">{soloCount}</div>

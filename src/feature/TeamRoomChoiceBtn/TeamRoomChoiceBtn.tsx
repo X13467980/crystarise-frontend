@@ -10,8 +10,8 @@ type Props = {
 };
 
 export default function TeamRoomChoiceBtn({
-    makeOne ='/newroom',
-    joinRoom = '/team',
+    makeOne ='/teamnewroom',
+    joinRoom = '/join',
     className = '',
 }: Props) {
     const router = useRouter()

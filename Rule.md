@@ -67,6 +67,10 @@
 
 ## 命名規則
 
+- **ページ名**：全て小文字
+  - `src/app/home/page.tsx`
+- **コンポーネント名**：パスカルケース
+  - `feature/StartButton/StartButton.tsx` 
 - **クラス名**：パスカルケース（名詞）
   - `public class Customer`
 - **メソッド名**：パスカルケース（動詞または動詞句）

@@ -1,11 +1,13 @@
 'use client'
 
 import TopBoard from "@/feature/TopBoard/TopBoard";
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar ,buildStyles} from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import Image from "next/image";
 
 export default function SoloPage() {
-  const percentage = 66;
+  const percentage = 90;
   return (
       
         <div
@@ -13,19 +15,6 @@ export default function SoloPage() {
       data-model-id="33:148"
     >
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
-        <div className="absolute w-[244px] h-[244px] top-[258px] left-1/2 transform -translate-x-1/2 rounded-[122px] border-[10px] border-solid border-[#e9fcff]">
-          <img
-            className="absolute w-[219px] h-[219px] top-1.5 left-[3px] object-cover"
-            alt="Element"
-            src="https://c.animaapp.com/men0codmc27QCa/img/----------2025-08-10-23-54-30-2.png"
-          />
-
-          <img
-            className="absolute w-[127px] h-[127px] -top-2.5 left-[107px]"
-            alt="Ellipse"
-            src="https://c.animaapp.com/men0codmc27QCa/img/ellipse-4.svg"
-          />
-        </div>
         
         <div className="absolute w-[260px] h-[250px] top-[529px] left-1/2 transform -translate-x-1/2 bg-[#e9fcff] rounded-[25px] border border-solid border-[#1be8ff]">
           <div className="absolute w-[100px] h-20 top-[75px] left-9 bg-[#fffefe] rounded-[10px] border border-solid border-[#f45c5c]">
@@ -55,6 +44,27 @@ export default function SoloPage() {
             </div>
           </div>
         </div>
+{/* Circle  */}
+<div className="absolute w-[244px] h-[244px] top-[258px] left-1/2 -translate-x-1/2 transform rounded-[122px]">
+  <CircularProgressbarWithChildren value={percentage} strokeWidth={3}>
+    <div className="w-full h-full grid place-items-center">
+      <div
+        className="relative"
+        style={{
+          width: `${Math.max(0, Math.min(percentage, 100))}%`,
+          height: `${Math.max(0, Math.min(percentage, 100))}%`,
+        }}
+      >
+        <Image
+          src="/snowflakeincircle.svg"
+          alt="snowflake"
+          fill
+          className="object-contain"
+        />
+      </div>
+    </div>
+  </CircularProgressbarWithChildren>
+</div>
 
         <TopBoard className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4" />
       </div>

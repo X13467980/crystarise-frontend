@@ -8,7 +8,7 @@ import RoomTypeChooseBtn from '@/feature/roomtypechoosebtn.tsx/roomtypechoosebtn
 import LogoutButton from '@/feature/logout/LogoutButton';
 import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
 
-export default function TeamRoomChoicePage() {
+export default function TeamRoomChoice() {
   const { data, loading, error } = useUserSummary();
 
   if (loading) {

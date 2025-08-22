@@ -20,7 +20,7 @@ export default function RoomTypeChooseBtn({
     return(
 <div className={`flex justify-between items-center w-73 ${className}`}>
   <button
-    onClick={handleOne}
+    onClick={handleMake}
     className="flex items-center justify-center w-35 h-40 rounded-xl shadow hover:opacity-90 transition"
     style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
     aria-label="ひとりで"
@@ -35,7 +35,7 @@ export default function RoomTypeChooseBtn({
     </div>
   </button>
   <button
-    onClick={handleMany}
+    onClick={handleJoin}
     className="flex items-center justify-center w-35 h-40 rounded-xl shadow hover:opacity-90 transition"
     style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
     aria-label="みんなで"
@@ -51,4 +51,4 @@ export default function RoomTypeChooseBtn({
   </button>
 </div>
     )
-}
+};

@@ -11,7 +11,7 @@ type Props = {
 
 export default function RoomTypeChooseBtn({
     toOne ='/newroom',
-    toMany = '/RoomtypeChooseBtn',
+    toMany = '/TeamRoomChoice',
     className = '',
 }: Props) {
     const router = useRouter()

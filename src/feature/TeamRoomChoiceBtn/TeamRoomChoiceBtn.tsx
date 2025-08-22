@@ -9,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-export default function RoomTypeChooseBtn({
+export default function TeamRoomChoiceBtn({
     makeOne ='/newroom',
     joinRoom = '/team',
     className = '',
@@ -27,7 +27,7 @@ export default function RoomTypeChooseBtn({
   >
     <div className="relative w-20 h-20">
       <Image
-        src="/oneppl.svg"
+        src="/makeOne.svg"
         alt="oneppl"
         fill
         className="object-contain"
@@ -42,7 +42,7 @@ export default function RoomTypeChooseBtn({
   >
     <div className="relative w-20 h-20">
       <Image
-        src="/manyppl.svg"
+        src="/Join.svg"
         alt="manyppl"
         fill
         className="object-contain"

@@ -4,7 +4,7 @@ import Header from '@/feature/header/Header';
 import ProfileCard from '@/feature/profile/ProfileCard';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import GoLoginButton from '@/feature/gologin/gologinbutton';
-import RoomTypeChooseBtn from '@/feature/roomtypechoosebtn.tsx/roomtypechoosebtn';
+import TeamRoomChoiceBtn from '@/feature/TeamRoomChoiceBtn/TeamRoomChoiceBtn';
 import LogoutButton from '@/feature/logout/LogoutButton';
 import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
 
@@ -61,7 +61,7 @@ export default function TeamRoomChoice() {
         <CrystalText
         className="mt-18"
         />
-        <RoomTypeChooseBtn />
+        <TeamRoomChoiceBtn />
       </main>
       </div>
       {data && (

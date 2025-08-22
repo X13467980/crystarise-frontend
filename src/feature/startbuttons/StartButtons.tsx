@@ -28,7 +28,7 @@ export default function StartButtons({
 <div className={`flex flex-row gap-4 flex-wrap justify-center ${className}`}>
   <button
     onClick={handleFirst}
-    className="min-w-[120px] px-4 py-3 rounded-xl font-semibold shadow hover:opacity-90 transition"
+    className="min-w-[120px] px-11 py-8 rounded-xl font-semibold shadow hover:opacity-90 transition"
     style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
     aria-label="初めから"
   >
@@ -45,7 +45,7 @@ export default function StartButtons({
 
   <button
     onClick={handleContinue}
-    className="min-w-[120px] px-4 py-3 rounded-xl font-semibold shadow hover:opacity-90 transition"
+    className="min-w-[120px] px-13 py-8 rounded-xl font-semibold shadow hover:opacity-90 transition"
     style={{ backgroundColor: '#EAFDFF', color: '#144895' }}
     aria-label="続きから"
   >

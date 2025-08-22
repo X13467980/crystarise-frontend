@@ -2,7 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase/client'; // ← ここはあなたの supabase 初期化ファイルのパスに合わせてね
+import { useAuth } from '@/feature/hooks/useAuth'; // ← パスは実際の配置に合わせて
+                                                     // 例: '@/hooks/useAuth' など
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
@@ -14,21 +15,27 @@ type Props = {
 
 export default function NewRoomButton({ title, targetValue, unit }: Props) {
   const router = useRouter();
+  const { token, isAuthenticated, validateToken, logout } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
+    // フロント側の軽いバリデーション
+    if (!title.trim()) return alert('目標タイトルを入力してください');
+    if (!Number.isFinite(targetValue) || targetValue <= 0)
+      return alert('目標の数値は正の数で入力してください');
+    if (!unit.trim()) return alert('単位を入力してください');
+
     try {
       setLoading(true);
 
-      // Supabaseセッションからアクセストークン取得
-      const { data: sessionData, error: sessionErr } = await supabase.auth.getSession();
-      if (sessionErr || !sessionData.session?.access_token) {
+      // ローカル保存トークンの有効性チェック
+      if (!isAuthenticated || !(await validateToken()) || !token) {
         alert('ログインが必要です');
+        logout(); // 任意：ログイン画面へ
         return;
       }
-      const token = sessionData.session.access_token;
 
-      // バックエンドへリクエスト
+      // バックエンドへリクエスト（Authorization: Bearer <token>）
       const res = await fetch(`${API_BASE}/rooms/solo`, {
         method: 'POST',
         headers: {
@@ -47,11 +54,10 @@ export default function NewRoomButton({ title, targetValue, unit }: Props) {
         throw new Error(err?.detail || `HTTP ${res.status}`);
       }
 
-      const data = await res.json();
-      // 成功したらルームページへ
+      const data: { room_id: number } = await res.json();
       router.push(`/rooms/${data.room_id}`);
     } catch (e: any) {
-      console.error(e);
+      console.error('[NewRoomButton] create failed:', e);
       alert(`作成に失敗しました: ${e.message ?? e}`);
     } finally {
       setLoading(false);

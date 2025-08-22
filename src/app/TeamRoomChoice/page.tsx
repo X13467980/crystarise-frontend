@@ -1,12 +1,12 @@
 'use client';
 
-import Header from '@/feature/header/Header';
-import ProfileCard from '@/feature/profile/ProfileCard';
+import Header from '@/feature/Header/Header';
+import ProfileCard from '@/feature/Profile/ProfileCard';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
-import GoLoginButton from '@/feature/gologin/gologinbutton';
+import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
 import TeamRoomChoiceBtn from '@/feature/TeamRoomChoiceBtn/TeamRoomChoiceBtn';
-import LogoutButton from '@/feature/logout/LogoutButton';
-import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
+import LogoutButton from '@/feature/Logout/LogoutButton';
+import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
 
 export default function TeamRoomChoice() {
   const { data, loading, error } = useUserSummary();

@@ -11,14 +11,6 @@ import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
 
-  const handleSolo = () => {
-    console.log('一人で始める clicked');
-  };
-
-  const handleTeam = () => {
-    console.log('みんなで始める clicked');
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
@@ -48,7 +40,7 @@ export default function HomePage() {
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-90">ログインしてください</p>
           <GoLoginButton />
-          <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
+          <StartButtons />
         </main>
       </div>
     );
@@ -69,7 +61,7 @@ export default function HomePage() {
         <CrystalText
         className="mt-18"
         />
-        <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
+        <StartButtons />
       </main>
 
       {data && (

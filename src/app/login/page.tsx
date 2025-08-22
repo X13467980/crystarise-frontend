@@ -1,4 +1,4 @@
-import LoginForm from "@/feature/login/LoginForm";
+import LoginForm from "@/feature/Login/LoginForm";
 import Image from "next/image"
 
 

@@ -1,3 +1,5 @@
+"use client"
+
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
@@ -16,7 +18,7 @@ export default function RoomTypeChooseBtn() {
               >
               <div className="h-24">
                 <Image
-                  src="/gofirst.svg"
+                  src="/.svg"
                   width={100}
                   height={100}
                   alt="GoFirstImg"

@@ -4,6 +4,7 @@ import ProfileCard from '@/feature/profile/ProfileCard';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import CrystalText from "@/feature/crystalgrowtext/crystalgrowtext";
 import LogoutButton from '@/feature/logout/LogoutButton';
+import RoomTypeChooseBtn from "@/feature/roomtypechoosebtn.tsx/roomtypechoosebtn";
 
 export default function FirstTimePage () {
 const { data, loading, error } = useUserSummary();
@@ -54,6 +55,7 @@ return (
                 className="w-full max-w-md md:max-w-lg"
             />
             <CrystalText />
+            <RoomTypeChooseBtn />
         </main>
     </div>
 )

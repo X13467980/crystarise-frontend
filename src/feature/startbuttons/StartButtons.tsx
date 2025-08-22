@@ -25,7 +25,7 @@ export default function StartButtons({
   };
 
   return (
-<div className={`flex flex-row md:flex-row gap-4 w-full max-w-md ${className}`}>
+<div className={`flex flex-row justify-center md:flex-row gap-4 w-full max-w-md ${className}`}>
   <button
     onClick={handleFirst}
     className="min-w-[120px] px-11 py-8 rounded-xl font-semibold shadow hover:opacity-90 transition"

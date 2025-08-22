@@ -53,6 +53,7 @@ return (
                 badgeCount={data.badgeCount}
                 className="w-full max-w-md md:max-w-lg"
             />
+            <CrystalText />
         </main>
     </div>
 )

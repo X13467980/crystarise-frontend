@@ -67,7 +67,7 @@ export default function HomePage() {
           className="w-full max-w-md md:max-w-lg"
         />
         <CrystalText
-        className="mt-10"
+        className="mt-18"
         />
         <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
       </main>

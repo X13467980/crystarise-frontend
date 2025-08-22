@@ -2,9 +2,9 @@ type Props = {
     className?: string;
 };
 
-export default function CrystalText({className=""}: Props) {
+export default function CrystalText({ className = "" }: Props) {
     return (
-        <span className="font-inter text-md ${className}">努力で結晶を育てよう</span>
+        <p className={`font-inter text-base text-[#EAFDFF] ${className}`}>努力で結晶を育てよう</p>
     )
 };
 

@@ -16,7 +16,7 @@
 :root {
   --background: #144895;
   --text-color: #144895;
-  --foreground: #171717;
+  --secondary: #EAFDFF;
   --light-button: #1CE8FF;
 }
 
@@ -34,8 +34,12 @@ body {
 }
 
 .primary-btn {
-  @apply bg-[var(--light-button)] text-[var(--text-color)] text-sm font-normal px-29 py-5 rounded-md active:scale-95 active:shadow-inner hover:bg-blue-500;
+  @apply w-full bg-[var(--light-button)] text-[var(--text-color)] text-sm font-normal py-5 rounded-md active:scale-95 active:shadow-inner hover:bg-blue-500;
 }
 .login-input {
-  @apply bg-[#EAFDFF] text-[var(--text--color)] text-sm font-normal px-3 py-5 rounded-md border-2 border-[#1CE8FF];
+  @apply w-full bg-[var(--secondary)] text-[var(--text-color)] text-sm font-normal py-5 rounded-md border-2 border-[#1CE8FF];
+}
+
+.container {
+  @apply m-auto px-12 max-w-100 flex flex-col py-10 min-h-screen;
 }

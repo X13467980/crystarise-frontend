@@ -5,9 +5,8 @@ import Image from "next/image"
 function Home() {
   return (
 
-  <div className="flex justify-center min-h-screen">
-    <div>
-      <div className="mt-37">
+  <div className="container">
+      <div className="mt-37 flex flex-col items-center">
         <Image
           src="/snowflake-icon.svg"
           width={254}
@@ -27,7 +26,6 @@ function Home() {
         <GoRegisterButton />
 
       </div>
-    </div>
   </div>
   );
 }

@@ -6,6 +6,7 @@ import GoLoginButton from '@/feature/gologin/gologinbutton';
 import StartButtons from '@/feature/startbuttons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/logout/LogoutButton';
+import CrystalText from '@/feature/crystalgrowtext/crystalgrowtext';
 
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
@@ -64,6 +65,9 @@ export default function HomePage() {
           teamCount={data.teamCount}
           badgeCount={data.badgeCount}
           className="w-full max-w-md md:max-w-lg"
+        />
+        <CrystalText
+        className="mt-10"
         />
         <StartButtons onSoloClick={handleSolo} onTeamClick={handleTeam} />
       </main>

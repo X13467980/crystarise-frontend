@@ -61,7 +61,7 @@ const LoginForm: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <input
-            className="login-input w-full"
+            className="login-input w-full px-4"
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
@@ -72,7 +72,7 @@ const LoginForm: React.FC = () => {
         </div>
         <div className="mt-5">
           <input
-            className="login-input w-full"
+            className="login-input w-full px-4"
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}

@@ -4,9 +4,8 @@ import Image from "next/image"
 
 export default function LoginPage() {
   return (
-    <div className="flex justify-center min-h-screen">
-        <div>
-        <div className="mt-37">
+    <div className="container">
+        <div className="mt-37 flex flex-col items-center">
             <Image
                 src="/snowflake-icon.svg"
                 width={254}
@@ -23,7 +22,6 @@ export default function LoginPage() {
         </div>
         <div>
             <LoginForm />
-        </div>
         </div>
     </div>
   );

@@ -21,12 +21,34 @@ type RoomDetail = {
   };
 };
 
+// 作成直後の入力値（ドラフト）を読むための小さなフック
+function useDraft(roomId?: string) {
+  const [draft, setDraft] = useState<{
+    roomName?: string;
+    goalName?: string;
+    goalNumber?: number;
+    goalUnit?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!roomId) return;
+    try {
+      const raw = sessionStorage.getItem(`solo:room:${roomId}`);
+      if (raw) setDraft(JSON.parse(raw));
+    } catch {
+      // 破損時は無視
+    }
+  }, [roomId]);
+
+  return draft;
+}
+
 export default function SoloRoomPage({
   params,
 }: {
   params: Promise<{ room_id: string }>;
 }) {
-  // Next.js 15: params は Promise。React.use()で unwrap
+  // Next.js 15: params は Promise。React.use()（= usePromise）で unwrap
   const { room_id } = usePromise(params);
 
   const { token, validateToken } = useAuth();
@@ -44,11 +66,16 @@ export default function SoloRoomPage({
     validateTokenRef.current = validateToken;
   }, [validateToken]);
 
-  const roomName   = room?.name ?? 'Room';
-  const goalName   = room?.crystal?.title ?? 'Goal';
-  const goalNumber = room?.crystal?.target_value ?? 0;
-  const goalUnit   = room?.crystal?.unit ?? '';
+  // ▼ ドラフトを先に読む（遷移直後に即表示するため）
+  const draft = useDraft(room_id);
 
+  // ▼ 表示値は「API → draft → デフォルト」の優先順
+  const roomName   = room?.name ?? draft?.roomName ?? 'Room';
+  const goalName   = room?.crystal?.title ?? draft?.goalName ?? 'Goal';
+  const goalNumber = room?.crystal?.target_value ?? draft?.goalNumber ?? 0;
+  const goalUnit   = room?.crystal?.unit ?? draft?.goalUnit ?? '';
+
+  // TODO: 進捗APIができたら置き換え（current/target * 100）
   const percentage = useMemo(() => (goalNumber > 0 ? 70 : 0), [goalNumber]);
 
   useEffect(() => {
@@ -93,6 +120,15 @@ export default function SoloRoomPage({
         if (!cancelled) {
           setRoom(data);
           setLoading(false);
+
+          // APIで結晶データが返ったら、古いドラフトを掃除
+          if (data?.crystal) {
+            try {
+              sessionStorage.removeItem(`solo:room:${room_id}`);
+            } catch {
+              // noop
+            }
+          }
         }
       } catch (e: unknown) {
         if (!cancelled) {

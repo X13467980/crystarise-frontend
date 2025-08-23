@@ -21,13 +21,13 @@ export default function ProfileCard({
 }: Props) {
   
   return (
-    <section className={`flex items-center gap-6 ${className}`}>
+    <section className={`flex items-center gap-4 ${className}`}>
       {avatarUrl ? (
-        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-white/10 shrink-0">
+        <div className="w-24 h-24 rounded-full overflow-hidden bg-white/10 shrink-0">
           <Image src={avatarUrl} alt="avatar" fill className="object-cover" />
         </div>
       ) : (
-        <div className="w-24 h-24 rounded-full bg-gray-300/80 shrink-0" />
+        <div className="w-20 h-20 rounded-full bg-gray-300/80 shrink-0" />
       )}
       <div className="flex flex-col gap-2">
         <h2 className="font-mkpop text-2xl tracking-wide">{displayName}</h2>

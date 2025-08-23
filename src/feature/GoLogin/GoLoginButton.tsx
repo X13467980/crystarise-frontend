@@ -10,9 +10,7 @@ const GoLoginButton: React.FC = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleLoginClick} className="primary-btn">ログイン</button>
-    </div>
+    <button onClick={handleLoginClick} className="primary-btn w-full">ログイン</button>
   );
 };
 

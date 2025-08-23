@@ -1,7 +1,10 @@
+"use Client"
+
 import Header from "@/feature/Header/Header"
 import TopBoard from "@/feature/TopBoard/TopBoard"
 import Image from "next/image"
 import UserCircleList, { User } from "@/feature/UserCircleList/UserCircleList";
+
 
 
 export default function Lobby () {
@@ -34,7 +37,7 @@ const sampleUsers: User[] = [
             </div>
             <div className="w-full flex justify-center">
                 <div className="">
-                    <button className="primary-btn min-w-70">開始する</button>
+                    <Link className="primary-btn min-w-70" href="/team">開始する</Link>
                 </div>
             </div>
             

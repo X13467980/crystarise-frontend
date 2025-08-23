@@ -4,7 +4,7 @@ import Header from "@/feature/Header/Header"
 import TopBoard from "@/feature/TopBoard/TopBoard"
 import Image from "next/image"
 import UserCircleList, { User } from "@/feature/UserCircleList/UserCircleList";
-
+import StartTeamBtn from "@/feature/StartTeamBtn/StartTeamBtn";
 
 
 export default function Lobby () {
@@ -35,11 +35,7 @@ const sampleUsers: User[] = [
             <div className="w-full min-h-screen flex justify-center">
                 <UserCircleList users={sampleUsers} />
             </div>
-            <div className="w-full flex justify-center">
-                <div className="">
-                    <Link className="primary-btn min-w-70" href="/team">開始する</Link>
-                </div>
-            </div>
+            <StartTeamBtn />
             
 
         </div>

@@ -1,7 +1,7 @@
 import Header from "@/feature/Header/Header"
 import Image from "next/image"
 import Link from "next/link"
-import TopBoard from "@/feature/TopBoard/TopBoard"
+
 
 export default function Done100Page() {
     return (
@@ -24,10 +24,10 @@ export default function Done100Page() {
                     alt="information"
                     />
                     <Link
-                        href="/nextdone100"
+                        href="/home"
                         className="primary-btn mt-4 text-center"
                     >
-                        次へ
+                        ホームに戻る
                     </Link>
                 </div>
             </div>

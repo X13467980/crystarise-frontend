@@ -3,8 +3,12 @@ import Image from "next/image"
 import Link from "next/link"
 import TopBoard from "@/feature/TopBoard/TopBoard"
 
-export default function Done100Page() {
-    return (
+export default function nextdone100 () {
+const roomName   = room?.name ?? 'Room';
+const goalName   = room?.crystal?.title ?? 'Goal';
+const goalNumber = room?.crystal?.target_value ?? 0;
+const goalUnit   = room?.crystal?.unit ?? '';
+    return(
         <div className="">
             <Header />
             <div className="w-full min-h-screen flex justify-center mt-50">
@@ -24,14 +28,14 @@ export default function Done100Page() {
                     alt="information"
                     />
                     <Link
-                        href="/nextdone100"
+                        href="/getbadge100"
                         className="primary-btn mt-4 text-center"
-                    >
-                        次へ
+                    >       
+                    次へ
                     </Link>
+                    <TopBoard />
                 </div>
             </div>
         </div>
-
     )
 }

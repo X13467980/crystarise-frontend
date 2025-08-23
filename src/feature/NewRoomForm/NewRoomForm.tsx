@@ -1,18 +1,18 @@
 'use client';
 
 import Header from '@/feature/Header/Header';
-import ProfileCard from '@/feature/Profile/ProfileCard';
-import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
-import StartButtons from '@/feature/StartButtons/StartButtons';
-import { useUserSummary } from '@/feature/hooks/useUserSummary';
-import LogoutButton from '@/feature/Logout/LogoutButton';
 import NewRoomInput from '@/feature/NewRoomInput/NewRoomInput';
-
-import React, { useState } from 'react';
 import NewRoomGoal from '@/feature/NewRoomGoal/NewRoomGoal';
 import NewRoomButton from '@/feature/NewRoomButton/NewRoomButton';
+import React, { useState } from 'react';
 
-export default function NewRoomPage() {
+type RoomType = 'solo' | 'team';
+
+interface NewRoomFormProps {
+  roomType: RoomType; // 'solo' or 'team'
+}
+
+export default function NewRoomForm({ roomType }: NewRoomFormProps) {
   const [roomName, setRoomName] = useState('');
   const [goal, setGoal] = useState('');
   const [number, setNumber] = useState('');
@@ -46,12 +46,14 @@ export default function NewRoomPage() {
             </div>
           </div>
           <NewRoomButton
-            name={roomName}   // 追加したrooms.name
+            roomType={roomType}                 // ★ ここで種別を渡す
+            name={roomName}
             title={goal}
-            targetValue={Number(number) || 0}  // 数値に変換（未入力は0）
-            unit={unit} />
+            targetValue={Number(number) || 0}
+            unit={unit}
+          />
         </main>
       </div>
     </>
-  )
+  );
 }

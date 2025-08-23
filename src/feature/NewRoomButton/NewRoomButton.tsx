@@ -2,19 +2,21 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAuth } from '@/feature/hooks/useAuth'; // ← パスは実際の配置に合わせて
-                                                     // 例: '@/hooks/useAuth' など
+import { useAuth } from '@/feature/hooks/useAuth';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
+type RoomType = 'solo' | 'team';
+
 type Props = {
-  name: string;        // rooms.name
+  roomType: RoomType;   // ← 追加: 'solo' or 'team'
+  name: string;         // rooms.name
   title: string;        // crystals.title
   targetValue: number;  // crystals.target_value
   unit: string;         // crystals.unit
 };
 
-export default function NewRoomButton({ name, title, targetValue, unit }: Props) {
+export default function NewRoomButton({ roomType, name, title, targetValue, unit }: Props) {
   const router = useRouter();
   const { token, isAuthenticated, validateToken, logout } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -33,12 +35,14 @@ export default function NewRoomButton({ name, title, targetValue, unit }: Props)
       // ローカル保存トークンの有効性チェック
       if (!isAuthenticated || !(await validateToken()) || !token) {
         alert('ログインが必要です');
-        logout(); // 任意：ログイン画面へ
+        logout();
         return;
       }
 
-      // バックエンドへリクエスト（Authorization: Bearer <token>）
-      const res = await fetch(`${API_BASE}/rooms/solo`, {
+      // 種別に応じてエンドポイント切替
+      const endpoint = roomType === 'solo' ? '/rooms/solo' : '/rooms/team';
+
+      const res = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,8 +61,11 @@ export default function NewRoomButton({ name, title, targetValue, unit }: Props)
         throw new Error(err?.detail || `HTTP ${res.status}`);
       }
 
-      const data: { room_id: number } = await res.json();
-      router.push(`/rooms/${data.room_id}`);
+      const data: { room_id?: number; id?: number } = await res.json();
+      const roomId = data.room_id ?? data.id;
+      if (!roomId) throw new Error('Invalid response: room_id not found');
+
+      router.push(`/rooms/${roomId}`);
     } catch (e: any) {
       console.error('[NewRoomButton] create failed:', e);
       alert(`作成に失敗しました: ${e.message ?? e}`);
@@ -75,7 +82,7 @@ export default function NewRoomButton({ name, title, targetValue, unit }: Props)
         onClick={handleClick}
         disabled={loading}
       >
-        {loading ? '作成中...' : '作成する'}
+        {loading ? '作成中...' : roomType === 'solo' ? '一人で作成する' : 'みんなで作成する'}
       </button>
     </div>
   );

@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function RoomTypeChooseBtn({
-    toOne ='/newroom',
+    toOne ='/newroom/solo',
     toMany = '/teamroomchoice',
     className = '',
 }: Props) {

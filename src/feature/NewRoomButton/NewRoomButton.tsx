@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '@/feature/hooks/useAuth';
+// If '@/lib/routes' does not exist, create the file as shown below or correct the import path if it is incorrect.
+import { getRoomPath } from '../../lib/routes';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
@@ -78,7 +80,7 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
       const roomId = data?.room_id ?? data?.id;
       if (!roomId) throw new Error('Invalid response: room_id not found');
 
-      router.push(`/rooms/${roomId}`);
+      router.push(getRoomPath(roomType, roomId));
     } catch (e: unknown) {
       console.error('[NewRoomButton] create failed:', e);
       const message = e instanceof Error ? e.message : String(e);

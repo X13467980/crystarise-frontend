@@ -22,7 +22,7 @@ export default function ProgressRing({
   value,
   size = 244,
   strokeWidth = 12,
-  durationSec = 1.2,
+  durationSec = 10., // ← デフォルトをゆっくりめに
   trackColor = '#E9FCFF',
   progressColor = '#1CE8FF',
   animateFromZero = true,
@@ -36,13 +36,19 @@ export default function ProgressRing({
 
   // animate value
   const [animated, setAnimated] = useState(animateFromZero ? 0 : target);
+
   useEffect(() => {
     if (!animateFromZero) {
       setAnimated(target);
       return;
     }
-    // animate to new target (simple CSS transition)
-    requestAnimationFrame(() => setAnimated(target));
+
+    // 値が入ってから少し遅延してアニメーション開始
+    const timer = setTimeout(() => {
+      setAnimated(target);
+    }, 150); // 150ms 後にアニメーション開始
+
+    return () => clearTimeout(timer);
   }, [target, animateFromZero]);
 
   const dashOffset = useMemo(
@@ -81,7 +87,9 @@ export default function ProgressRing({
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
-          style={{ transition: `stroke-dashoffset ${durationSec}s ease` }}
+          style={{
+            transition: `stroke-dashoffset ${durationSec}s cubic-bezier(0.4, 0, 0.2, 1)`,
+          }}
         />
       </svg>
 

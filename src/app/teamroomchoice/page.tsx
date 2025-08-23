@@ -45,30 +45,59 @@ export default function TeamRoomChoice() {
     );
   }
 
-  return (
-    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
-      <Header />
-      <div className="flex justify-center">
-        <main className="flex flex-col flex-1 items-center justify-center max-w-98 gap-8">
-        <ProfileCard
-          displayName={data.displayName}
-          avatarUrl={data.avatarUrl}
-          soloCount={data.soloCount}
-          teamCount={data.teamCount}
-          badgeCount={data.badgeCount}
-          className="w-full max-w-md md:max-w-lg"
-        />
-        <CrystalText
-        className="mt-18"
-        />
-        <TeamRoomChoiceBtn />
-      </main>
-      </div>
-      {data && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
-          <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />
+  // return (
+  //   <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
+  //     <Header />
+  //     <div className="flex justify-center">
+  //       <main className="flex flex-col flex-1 items-center justify-center max-w-98 gap-8">
+  //       <ProfileCard
+  //         displayName={data.displayName}
+  //         avatarUrl={data.avatarUrl}
+  //         soloCount={data.soloCount}
+  //         teamCount={data.teamCount}
+  //         badgeCount={data.badgeCount}
+  //         className="w-full max-w-md md:max-w-lg"
+  //       />
+  //       <CrystalText
+  //       className="mt-18"
+  //       />
+  //       <TeamRoomChoiceBtn />
+  //     </main>
+  //     </div>
+  //     {data && (
+  //       <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
+  //         <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+
+    return (
+      <>
+        <div className='absolute inset-0' style={{ height: 'fit-content' }}>
+          <Header />
         </div>
-      )}
-    </div>
-  );
+        <div className="min-h-screen text-white h-[100dvh]" style={{ backgroundColor: '#144895' }}>
+          <div className="h-full flex justify-center ">
+            <main className=" h-full flex flex-col justify-between pb-10">
+              <ProfileCard
+                displayName={data.displayName}
+                avatarUrl={data.avatarUrl}
+                soloCount={data.soloCount}
+                teamCount={data.teamCount}
+                badgeCount={data.badgeCount}
+                className="w-full max-w-md md:max-w-lg justify-center pt-28"
+              />
+              <div className='text-center'>
+                <CrystalText />
+                <TeamRoomChoiceBtn className='pt-4' />
+              </div>
+              <div className="flex items-center space-y-4">
+                <LogoutButton/>
+              </div>
+            </main>
+          </div>
+        </div>
+      </>
+    );
 }

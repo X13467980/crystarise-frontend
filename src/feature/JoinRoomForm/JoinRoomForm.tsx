@@ -1,7 +1,7 @@
 // src/feature/JoinRoomForm/JoinRoomForm.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Props = {
   onSubmit?: (payload: { roomId: string; password: string }) => Promise<boolean> | boolean;
@@ -26,7 +26,9 @@ export default function JoinRoomForm({
 
   const isValid = roomId.trim().length > 0 && password.trim().length > 0;
 
-  if (onValidChange) onValidChange(isValid);
+  useEffect(() => {
+    if (onValidChange) onValidChange(isValid);
+  }, [isValid, onValidChange]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

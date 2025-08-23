@@ -28,7 +28,7 @@ export default function NewRoomSoloPage() {
               />
             </div>
             <div className="w-full flex flex-col items-center space-y-4">
-              <p className="text:[var(--secondary)]">目標を入力する</p>
+              <p className="text-[var(--secondary)]">目標を入力する</p>
               <NewRoomGoal
                 goal={goal}
                 number={number}

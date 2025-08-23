@@ -50,12 +50,16 @@ export default function SoloRoomPage({
 }) {
   // Next.js 15: params は Promise。React.use()（= usePromise）で unwrap
   const { room_id } = usePromise(params);
+  const roomIdNum = Number(room_id);            // ★ 追記: 数値化して渡しやすく
 
   const { token, validateToken } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<RoomDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // ★ 追加: 進捗％の状態（POST 返却値を反映）
+  const [progress, setProgress] = useState<number>(0);
 
   // 同じ (room_id, token) の組み合わせでの多重フェッチを防ぐ
   const fetchedKeyRef = useRef<string | null>(null);
@@ -75,8 +79,11 @@ export default function SoloRoomPage({
   const goalNumber = room?.crystal?.target_value ?? draft?.goalNumber ?? 0;
   const goalUnit   = room?.crystal?.unit ?? draft?.goalUnit ?? '';
 
-  // TODO: 進捗APIができたら置き換え（current/target * 100）
-  const percentage = useMemo(() => (goalNumber > 0 ? 70 : 0), [goalNumber]);
+  // ▼ 初期は 0%。（※もし進捗取得APIがあればここで setProgress 初期化）
+  const percentage = useMemo(() => {
+    const pct = Math.max(0, Math.min(100, Math.round(progress)));
+    return pct;
+  }, [progress]);
 
   useEffect(() => {
     // token未確定 or room_id未確定の間は何もしない（無駄なloading切り替え防止）
@@ -129,6 +136,10 @@ export default function SoloRoomPage({
               // noop
             }
           }
+
+          // ★（任意）初期進捗％をサーバから取得したい場合はここで追撃フェッチ
+          // const r = await fetch(`${API_BASE}/crystals/${roomIdNum}/progress`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
+          // if (r.ok) { const pct: number = await r.json(); setProgress(pct); }
         }
       } catch (e: unknown) {
         if (!cancelled) {
@@ -143,7 +154,7 @@ export default function SoloRoomPage({
       cancelled = true;
     };
     // 依存は room_id と token のみに抑える（validateToken は ref 化しているため不要）
-  }, [room_id, token]);
+  }, [room_id, token, roomIdNum]);
 
   if (!token) {
     // 自動遷移せず、静的に促す（チカチカ防止）
@@ -189,8 +200,16 @@ export default function SoloRoomPage({
   return (
     <div className="bg-[#144794] w-full min-h-screen flex justify-center" data-model-id="33:148">
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
-        <SoloRecord goalNumber={goalNumber} goalUnit={goalUnit} />
+        {/* ★ ここで POST の返却％を受け取り、リングに反映 */}
+        <SoloRecord
+          roomId={roomIdNum}
+          goalNumber={goalNumber}
+          goalUnit={goalUnit}
+          onSubmitted={(pct) => setProgress(pct)}
+        />
+
         <MovingCircle percentage={percentage} />
+
         <TopBoard
           className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4"
           roomName={roomName}

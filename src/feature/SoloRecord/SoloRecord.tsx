@@ -1,62 +1,109 @@
+// src/feature/SoloRecord/SoloRecord.tsx
 'use client';
 
 import { useState } from "react";
+import { useAuth } from "@/feature/hooks/useAuth";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 type Props = {
-  goalNumber?: number; 
-  goalUnit?: string;   
+  roomId: number;                 // ★ どのルームか
+  goalNumber?: number;
+  goalUnit?: string;
+  onSubmitted?: (percent: number) => void; // ★ 進捗％を親へ
 };
 
-export default function SoloRecord({ goalNumber, goalUnit }: Props) {
+export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }: Props) {
   const [value, setValue] = useState("");
+  const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { token } = useAuth(); // ★ JWT
 
   const submit = async () => {
-    if (value === "" || Number.isNaN(Number(value))) return; 
-    await fetch(`${API_BASE}/record`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: Number(value) }), 
-    });
+    const v = Number(value);
+    if (value === "" || Number.isNaN(v)) return;
+    if (!token) {
+      alert("サインインが必要です");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/crystals/${roomId}/records`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "accept": "application/json",
+        },
+        body: JSON.stringify({ value: v, note: note || undefined }),
+      });
+
+      // エラー時のメッセージ抽出（[object Object]対策）
+      const extractError = async (r: Response) => {
+        try {
+          const data = await r.clone().json();
+          return (data as any)?.detail ?? (data as any)?.error ?? (data as any)?.message ?? JSON.stringify(data);
+        } catch {
+          return await r.text();
+        }
+      };
+
+      if (!res.ok) {
+        const msg = await extractError(res);
+        throw new Error(msg);
+      }
+
+      // 返却は整数（例: 37）。JSONとしてそのまま数値が返ってくる想定
+      const percent: number = await res.json();
+      onSubmitted?.(percent);   // ★ 親に進捗％を渡す
+      setValue("");
+      setNote("");
+    } catch (e: any) {
+      console.error(e);
+      alert(`記録に失敗: ${e?.message ?? e}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="absolute w-[260px] h-[250px] top-[529px] left-1/2 transform -translate-x-1/2 bg-[#e9fcff] rounded-[25px] border border-solid border-[#1be8ff]">
-      <input
-        className="absolute w-[100px] h-20 top-[75px] left-9 bg-[#fffefe] rounded-[10px] border border-solid border-[#f45c5c] px-3 text-right"
-        type="number"
-        inputMode="decimal"
-        step="any"
-        placeholder="0"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            submit();
-          }
-        }}
-      />
+    <div className="absolute w-[260px] h-[290px] top-[529px] left-1/2 transform -translate-x-1/2 bg-[#e9fcff] rounded-[25px] border border-solid border-[#1be8ff] p-3">
+      <div className="w-full text-center text-[#144794] text-base mb-2">努力の記録を入力しよう</div>
 
-      <div className="absolute w-[88px] h-[60px] top-[97px] left-[141px]">
-        <div className="absolute w-20 h-[60px] top-0 left-4 font-mkpop text-[#144794] text-2xl text-center">
+      <div className="flex items-center gap-3 mb-2">
+        <input
+          className="w-[120px] h-12 bg-white rounded-[10px] border border-solid border-[#f45c5c] px-3 text-right"
+          type="number"
+          inputMode="decimal"
+          step="any"
+          placeholder="0"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } }}
+          disabled={loading}
+        />
+        <div className="text-[#144794] text-xl font-mkpop">
           {(goalNumber ?? 0)}{goalUnit ?? ""}
         </div>
       </div>
 
-      <div className="w-[255px] h-5 top-[29px] left-px absolute text-base text-center text-[#144794]">
-        努力の記録を入力しよう
-      </div>
+      <input
+        className="w-full h-10 bg-white rounded-[10px] border border-solid border-[#c8eaf0] px-3 mb-3"
+        placeholder="メモ（任意）"
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        disabled={loading}
+      />
 
       <button
-        className="absolute w-[195px] h-10 top-[185px] left-[33px] bg-[#1be8ff] rounded-[10px] active:scale-95 active:shadow-inner hover:bg-blue-500"
+        className="w-full h-10 bg-[#1be8ff] rounded-[10px] active:scale-95 active:shadow-inner hover:bg-blue-500 disabled:opacity-60"
         onClick={submit}
+        disabled={loading}
       >
-        <div className="w-[104px] h-[15px] top-[11px] left-[47px] absolute text-xs text-center font-inter text-[#144794]">
-          記録する
-        </div>
+        <span className="text-xs text-center font-inter text-[#144794]">
+          {loading ? "送信中..." : "記録する"}
+        </span>
       </button>
     </div>
   );

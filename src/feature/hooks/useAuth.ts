@@ -1,17 +1,31 @@
-//useAuth.ts
+// useAuth.ts
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-function parseJwt<T = any>(token: string): T | null {
+// Base64URL を通常の Base64 に直してからデコード
+function base64UrlDecode(b64url: string): string {
+  const pad = '='.repeat((4 - (b64url.length % 4)) % 4);
+  const b64 = (b64url + pad).replace(/-/g, '+').replace(/_/g, '/');
+  // atob は ASCII を返すので、そのまま JSON.parse できる
+  return atob(b64);
+}
+
+function parseJwt<T = unknown>(token: string): T | null {
   try {
-    const payload = token.split('.')[1];
-    const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(decodeURIComponent(escape(json)));
+    const payloadPart = token.split('.')[1];
+    if (!payloadPart) return null;
+    const json = base64UrlDecode(payloadPart);
+    return JSON.parse(json) as T;
   } catch {
     return null;
   }
+}
+
+interface JwtPayload {
+  exp?: number; // seconds-since-epoch
+  [k: string]: unknown;
 }
 
 export function useAuth() {
@@ -20,17 +34,17 @@ export function useAuth() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('access_token');
-    if (storedToken) {
-      // 期限チェック（expは秒単位UNIX時刻）
-      const payload = parseJwt<{ exp?: number }>(storedToken);
-      const now = Math.floor(Date.now() / 1000);
-      if (payload?.exp && payload.exp > now) {
-        setToken(storedToken);
-        setIsAuthenticated(true);
-      } else {
-        localStorage.removeItem('access_token');
-      }
+    const stored = localStorage.getItem('access_token');
+    if (!stored) return;
+
+    const payload = parseJwt<JwtPayload>(stored);
+    const now = Math.floor(Date.now() / 1000);
+
+    if (payload && typeof payload.exp === 'number' && payload.exp > now) {
+      setToken(stored);
+      setIsAuthenticated(true);
+    } else {
+      localStorage.removeItem('access_token');
     }
   }, []);
 
@@ -47,12 +61,12 @@ export function useAuth() {
     router.push('/login');
   };
 
-  // ★ ネットワークには行かずローカルで有効性を判定（重複リクエスト防止）
+  // ネットワークに行かずローカルで検証
   const validateToken = async (): Promise<boolean> => {
     if (!token) return false;
-    const payload = parseJwt<{ exp?: number }>(token);
+    const payload = parseJwt<JwtPayload>(token);
     const now = Math.floor(Date.now() / 1000);
-    const ok = !!(payload?.exp && payload.exp > now);
+    const ok = !!(payload && typeof payload.exp === 'number' && payload.exp > now);
     if (!ok) {
       localStorage.removeItem('access_token');
       setToken(null);

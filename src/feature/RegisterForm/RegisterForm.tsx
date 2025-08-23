@@ -6,17 +6,26 @@ import { useRouter } from 'next/navigation';
 const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
+type FormState = { email: string; password: string };
+
+type SignUpResponse = {
+  message?: string;
+  detail?: string;
+};
+
 const RegisterForm: React.FC = () => {
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState<FormState>({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState<string | null>(null);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // name は "email" | "password" の想定なので型を保ったまま更新
+    setForm(prev => ({ ...prev, [name]: value } as FormState));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrMsg(null);
     setLoading(true);
@@ -28,8 +37,8 @@ const RegisterForm: React.FC = () => {
         body: JSON.stringify(form),
       });
 
-      // FastAPI側は{message: "..."} or {detail: "..."}を返す想定
-      const data = await res.json();
+      // FastAPI 側は {message} or {detail} を返す想定
+      const data = (await res.json()) as SignUpResponse;
 
       if (!res.ok) {
         throw new Error(
@@ -40,10 +49,10 @@ const RegisterForm: React.FC = () => {
       }
 
       alert(data?.message ?? '登録に成功しました。確認メールをチェックしてください。');
-      // ここでログインページなどに遷移
       router.push('/home');
-    } catch (err: any) {
-      setErrMsg(err?.message ?? '登録に失敗しました。もう一度お試しください。');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setErrMsg(msg);
     } finally {
       setLoading(false);
     }

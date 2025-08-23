@@ -4,7 +4,7 @@ import Header from '@/feature/Header/Header';
 import ProfileCard from '@/feature/Profile/ProfileCard';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
-import RoomTypeChooseBtn from '@/feature/RoomTypeChooseBtn.tsx/RoomTypeChooseBtn';
+import RoomTypeChooseBtn from '@/feature/RoomTypeChooseBtn/RoomTypeChooseBtn';
 import LogoutButton from '@/feature/Logout/LogoutButton';
 import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
 export default function HomePage() {

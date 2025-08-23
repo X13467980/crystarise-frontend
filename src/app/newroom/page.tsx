@@ -37,6 +37,7 @@ export default function NewRoomPage() {
           {/* 入力値をAPI実行ボタンに渡す */}
           <div className="w-full flex flex-col items-center pb-20">
             <NewRoomButton
+              name={roomName}   // 追加したrooms.name
               title={goal}
               targetValue={Number(number) || 0}  // 数値に変換（未入力は0）
               unit={unit}

@@ -9,7 +9,7 @@ export default function Done100Page() {
             <Header />
             <div className="w-full min-h-screen flex justify-center mt-50">
                 <div className="w-72 h-105 flex flex-col justify-center items-center gap-5">
-                    <p className="font-mkpop text-4xl">100% 達成！</p>
+                    <p className="font-mkpop text-2xl">バッチを獲得ました！</p>
                     <Image
                     src="/fullsnowflake.svg"
                     width={287}
@@ -25,7 +25,7 @@ export default function Done100Page() {
                     />
                     <Link
                         href="/home"
-                        className="primary-btn mt-4 text-center"
+                        className="primary-btn mt-25 text-center"
                     >
                         ホームに戻る
                     </Link>

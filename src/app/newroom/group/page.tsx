@@ -40,7 +40,7 @@ export default function NewRoomGroupPage() {
             </div>
           </div>
           <NewRoomButton
-            roomType="team"                 // ← グループ用: /rooms/team を叩く
+            roomType="group"                 // ← グループ用: /rooms/group を叩く
             name={roomName}
             title={goal}
             targetValue={Number(number) || 0}

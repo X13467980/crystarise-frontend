@@ -1,7 +1,7 @@
-// src/app/solo/rooms/[room_id]/page.tsx
 'use client';
 
 import { useEffect, useMemo, useRef, useState, use as usePromise } from 'react';
+import { useRouter } from 'next/navigation';  // ← 追加
 import TopBoard from '@/feature/TopBoard/TopBoard';
 import MovingCircle from '@/feature/MovingCircle/MovingCircle';
 import SoloRecord from '@/feature/SoloRecord/SoloRecord';
@@ -48,9 +48,10 @@ export default function SoloRoomPage({
 }: {
   params: Promise<{ room_id: string }>;
 }) {
-  // Next.js 15: params は Promise。React.use()（= usePromise）で unwrap
   const { room_id } = usePromise(params);
-  const roomIdNum = Number(room_id);            // ★ 追記: 数値化して渡しやすく
+  const roomIdNum = Number(room_id);
+
+  const router = useRouter(); // ← 追加
 
   const { token, validateToken } = useAuth();
 
@@ -61,36 +62,30 @@ export default function SoloRoomPage({
   // ★ 追加: 進捗％の状態（POST 返却値を反映）
   const [progress, setProgress] = useState<number>(0);
 
-  // 同じ (room_id, token) の組み合わせでの多重フェッチを防ぐ
   const fetchedKeyRef = useRef<string | null>(null);
 
-  // validateToken を安定参照にして、依存配列に入れずにESLintを満たす
   const validateTokenRef = useRef(validateToken);
   useEffect(() => {
     validateTokenRef.current = validateToken;
   }, [validateToken]);
 
-  // ▼ ドラフトを先に読む（遷移直後に即表示するため）
   const draft = useDraft(room_id);
 
-  // ▼ 表示値は「API → draft → デフォルト」の優先順
   const roomName   = room?.name ?? draft?.roomName ?? 'Room';
   const goalName   = room?.crystal?.title ?? draft?.goalName ?? 'Goal';
   const goalNumber = room?.crystal?.target_value ?? draft?.goalNumber ?? 0;
   const goalUnit   = room?.crystal?.unit ?? draft?.goalUnit ?? '';
 
-  // ▼ 初期は 0%。（※もし進捗取得APIがあればここで setProgress 初期化）
   const percentage = useMemo(() => {
     const pct = Math.max(0, Math.min(100, Math.round(progress)));
     return pct;
   }, [progress]);
 
   useEffect(() => {
-    // token未確定 or room_id未確定の間は何もしない（無駄なloading切り替え防止）
     if (!room_id || !token) return;
 
     const key = `${room_id}:${token}`;
-    if (fetchedKeyRef.current === key) return; // 既に同じ条件でフェッチ済みならスキップ
+    if (fetchedKeyRef.current === key) return;
     fetchedKeyRef.current = key;
 
     let cancelled = false;
@@ -100,7 +95,7 @@ export default function SoloRoomPage({
         setLoading(true);
         setError(null);
 
-        const ok = await validateTokenRef.current(); // ← 安定参照経由で実行
+        const ok = await validateTokenRef.current();
         if (!ok) {
           if (!cancelled) {
             setError('ログインが必要です');
@@ -128,7 +123,6 @@ export default function SoloRoomPage({
           setRoom(data);
           setLoading(false);
 
-          // APIで結晶データが返ったら、古いドラフトを掃除
           if (data?.crystal) {
             try {
               sessionStorage.removeItem(`solo:room:${room_id}`);
@@ -136,10 +130,6 @@ export default function SoloRoomPage({
               // noop
             }
           }
-
-          // ★（任意）初期進捗％をサーバから取得したい場合はここで追撃フェッチ
-          // const r = await fetch(`${API_BASE}/crystals/${roomIdNum}/progress`, { headers: { Authorization: `Bearer ${token}` }, cache: 'no-store' });
-          // if (r.ok) { const pct: number = await r.json(); setProgress(pct); }
         }
       } catch (e: unknown) {
         if (!cancelled) {
@@ -153,11 +143,9 @@ export default function SoloRoomPage({
     return () => {
       cancelled = true;
     };
-    // 依存は room_id と token のみに抑える（validateToken は ref 化しているため不要）
   }, [room_id, token, roomIdNum]);
 
   if (!token) {
-    // 自動遷移せず、静的に促す（チカチカ防止）
     return (
       <div className="bg-[#144794] w-full min-h-screen flex items-center justify-center">
         <div className="text-center text-white">
@@ -200,12 +188,16 @@ export default function SoloRoomPage({
   return (
     <div className="bg-[#144794] w-full min-h-screen flex justify-center" data-model-id="33:148">
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
-        {/* ★ ここで POST の返却％を受け取り、リングに反映 */}
         <SoloRecord
           roomId={roomIdNum}
           goalNumber={goalNumber}
           goalUnit={goalUnit}
-          onSubmitted={(pct) => setProgress(pct)}
+          onSubmitted={(pct) => {
+            setProgress(pct);
+            if (pct === 100) {
+              router.push('/done100page'); // ← ここでリダイレクト
+            }
+          }}
         />
 
         <MovingCircle percentage={percentage} />

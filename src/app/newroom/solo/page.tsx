@@ -22,13 +22,10 @@ export default function NewRoomSoloPage() {
           <div className='h-full flex flex-col justify-center'>
             <div className="w-full flex flex-col items-center space-y-4 pb-10">
               <p className="text-[var(--secondary)]">ルーム名を入力する</p>
-              <NewRoomInput
-                value={roomName}
-                onChange={setRoomName}
-              />
+              <NewRoomInput value={roomName} onChange={setRoomName} />
             </div>
             <div className="w-full flex flex-col items-center space-y-4">
-              <p className="text:[var(--secondary)]">目標を入力する</p>
+              <p className="text-[var(--secondary)]">目標を入力する</p>
               <NewRoomGoal
                 goal={goal}
                 number={number}
@@ -39,8 +36,9 @@ export default function NewRoomSoloPage() {
               />
             </div>
           </div>
+
           <NewRoomButton
-            roomType="solo"                // ← ソロ固定でAPIを /rooms/solo に向ける
+            roomType="solo"
             name={roomName}
             title={goal}
             targetValue={Number(number) || 0}

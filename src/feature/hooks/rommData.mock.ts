@@ -1,17 +1,15 @@
-'use client'
-
-export type Room = {
-  roomName?: string;
-  goalName?: string;
-  goalNumber?: number;
-  goalUnit?: string;
+export type RoomData = {
+  roomName: string;
+  goalName: string;
+  goalNumber: number;
+  goalUnit: string;
 };
 
-export function RoomDataGetMock(): Room {
+export function RoomDataGetMock(): RoomData {
   return {
-    roomName: 'roomName',
-    goalName: 'goalName',
+    roomName: "My Room",
+    goalName: "Push-ups",
     goalNumber: 100,
-    goalUnit: 'km',
+    goalUnit: "times",
   };
 }

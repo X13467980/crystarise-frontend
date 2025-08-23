@@ -8,6 +8,8 @@ import Image from "next/image";
 import MovingCircle from "@/feature/MovingCircle/MovingCircle";
 import { RoomDataGetMock } from "@/feature/hooks/rommData.mock";
 import SoloRecord from "@/feature/SoloRecord/SoloRecord";
+import ProgressCard from "@/feature/ProgressCard/ProgressCard";
+import TeamRecordBtn from "@/feature/TeamRecordBtn/TeamRecordBtn";
 
 export default function SoloPage() {
   const percentage = 70;
@@ -19,9 +21,9 @@ export default function SoloPage() {
       data-model-id="33:148"
     >
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
-        <SoloRecord goalNumber={data.goalNumber} goalUnit={data.goalUnit}/>
         <MovingCircle percentage={percentage}/>
         <TopBoard className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4" roomName={data.roomName} goalName={data.goalName} goalNumber={data.goalNumber} goalUnit={data.goalUnit}/>
+        <SoloRecord />
       </div>
     </div>
   );

@@ -23,8 +23,7 @@ export default function SoloPage() {
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
         <MovingCircle percentage={percentage}/>
         <TopBoard className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4" roomName={data.roomName} goalName={data.goalName} goalNumber={data.goalNumber} goalUnit={data.goalUnit}/>
-        <ProgressCard />
-        <TeamRecordBtn />
+        <SoloRecord />
       </div>
     </div>
   );

@@ -6,9 +6,11 @@ import { CircularProgressbarWithChildren} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Image from "next/image";
 import MovingCircle from "@/feature/MovingCircle/MovingCircle";
+import { RoomDataGetMock } from "@/feature/hooks/rommData.mock";
 
 export default function SoloPage() {
   const percentage = 80;
+  const data = RoomDataGetMock()
   return (
       
         <div
@@ -46,7 +48,7 @@ export default function SoloPage() {
           </div>
         </div>
         <MovingCircle percentage={percentage}/>
-        <TopBoard className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4" />
+        <TopBoard className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4" roomName={data.roomName} goalName={data.goalName} goalNumber={data.goalNumber} goalUnit={data.goalUnit}/>
       </div>
     </div>
   );

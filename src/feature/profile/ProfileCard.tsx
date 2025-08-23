@@ -19,6 +19,7 @@ export default function ProfileCard({
   badgeCount,
   className = '',
 }: Props) {
+  
   return (
     <section className={`flex items-center gap-6 ${className}`}>
       {avatarUrl ? (

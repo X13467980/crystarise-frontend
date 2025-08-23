@@ -66,7 +66,7 @@ export default function HomePage() {
       </main>
       </div>
       {data && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
+        <div>
           <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />
         </div>
       )}

@@ -13,12 +13,6 @@ const GoLoginButton = () => {
 
     router.push("/login");
   };
-
-  // const handleLogoutClick = () => {
-  //   setIsLoggedIn(false);
-  //   console.log("ログアウトしました");
-  // };
-
   return (
     <div>
       {/* {isLoggedIn ? (

@@ -10,10 +10,13 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
+    "bootstrap": "^5.3.7",
     "next": "15.4.6",
     "react": "19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-circular-progressbar": "^2.2.0",
     "react-dom": "19.1.0",
+    "reactjs-popup": "^2.0.6",
     "swr": "^2.3.6"
   },
   "devDependencies": {

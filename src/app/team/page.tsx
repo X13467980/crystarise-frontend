@@ -1,3 +1,30 @@
-export default function TeamPage() {
-  return <div className="text-white p-6">みんなで始めるページ</div>;
+'use client'
+
+import TopBoard from "@/feature/TopBoard/TopBoard";
+import { CircularProgressbar ,buildStyles} from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import Image from "next/image";
+import MovingCircle from "@/feature/MovingCircle/MovingCircle";
+import { RoomDataGetMock } from "@/feature/hooks/rommData.mock";
+import SoloRecord from "@/feature/SoloRecord/SoloRecord";
+import ProgressCard from "@/feature/ProgressCard/ProgressCard";
+import TeamRecordBtn from "@/feature/TeamRecordBtn/TeamRecordBtn";
+
+export default function SoloPage() {
+  const percentage = 70;
+  const data = RoomDataGetMock()
+  return (
+      
+        <div
+      className="bg-[#144794] w-full min-h-screen flex justify-center"
+      data-model-id="33:148"
+    >
+      <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
+        <MovingCircle percentage={percentage}/>
+        <TopBoard className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4" roomName={data.roomName} goalName={data.goalName} goalNumber={data.goalNumber} goalUnit={data.goalUnit}/>
+        <ProgressCard />
+      </div>
+    </div>
+  );
 }

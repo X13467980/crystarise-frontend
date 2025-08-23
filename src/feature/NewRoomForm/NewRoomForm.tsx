@@ -6,10 +6,10 @@ import NewRoomGoal from '@/feature/NewRoomGoal/NewRoomGoal';
 import NewRoomButton from '@/feature/NewRoomButton/NewRoomButton';
 import React, { useState } from 'react';
 
-type RoomType = 'solo' | 'team';
+type RoomType = 'solo' | 'group';
 
 interface NewRoomFormProps {
-  roomType: RoomType; // 'solo' or 'team'
+  roomType: RoomType; // 'solo' or 'group'
 }
 
 export default function NewRoomForm({ roomType }: NewRoomFormProps) {

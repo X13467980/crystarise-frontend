@@ -6,10 +6,10 @@ import { useAuth } from '@/feature/hooks/useAuth';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
-type RoomType = 'solo' | 'team';
+type RoomType = 'solo' | 'group';
 
 type Props = {
-  roomType: RoomType;   // ← 追加: 'solo' or 'team'
+  roomType: RoomType;   // ← 追加: 'solo' or 'group'
   name: string;         // rooms.name
   title: string;        // crystals.title
   targetValue: number;  // crystals.target_value
@@ -40,7 +40,7 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
       }
 
       // 種別に応じてエンドポイント切替
-      const endpoint = roomType === 'solo' ? '/rooms/solo' : '/rooms/team';
+      const endpoint = roomType === 'solo' ? '/rooms/solo' : '/rooms/group';
 
       const res = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',

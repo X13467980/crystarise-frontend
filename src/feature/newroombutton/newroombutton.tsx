@@ -8,18 +8,20 @@ import { useAuth } from '@/feature/hooks/useAuth'; // ← パスは実際の配�
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
 type Props = {
+  name: string;        // rooms.name
   title: string;        // crystals.title
   targetValue: number;  // crystals.target_value
   unit: string;         // crystals.unit
 };
 
-export default function NewRoomButton({ title, targetValue, unit }: Props) {
+export default function NewRoomButton({ name, title, targetValue, unit }: Props) {
   const router = useRouter();
   const { token, isAuthenticated, validateToken, logout } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     // フロント側の軽いバリデーション
+    if (!name.trim()) return alert('ルーム名を入力してください');
     if (!title.trim()) return alert('目標タイトルを入力してください');
     if (!Number.isFinite(targetValue) || targetValue <= 0)
       return alert('目標の数値は正の数で入力してください');
@@ -43,6 +45,7 @@ export default function NewRoomButton({ title, targetValue, unit }: Props) {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          name,
           title,
           target_value: targetValue,
           unit,

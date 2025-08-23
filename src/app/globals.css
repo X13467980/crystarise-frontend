@@ -1,8 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: '851mkpop';
+  src: url('/fonts/851mkpop.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@utility font-mkpop {
+  font-family: '851mkpop', system-ui, sans-serif;
+  font-synthesis-weight: none;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #144895;
+  --text-color: #144895;
+  --secondary: #EAFDFF;
+  --light-button: #1CE8FF;
 }
 
 @theme inline {
@@ -10,17 +26,22 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-inter: "Inter", sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.primary-btn {
+  @apply w-full bg-[var(--light-button)] text-[var(--text-color)] text-sm font-normal py-5 rounded-md active:scale-95 active:shadow-inner hover:bg-blue-500;
+}
+.login-input {
+  @apply w-full bg-[var(--secondary)] text-[var(--text-color)] text-sm font-normal py-5 rounded-md border-2 border-[#1CE8FF];
+}
+
+.container {
+  @apply m-auto px-12 max-w-100 flex flex-col py-10 min-h-screen;
 }

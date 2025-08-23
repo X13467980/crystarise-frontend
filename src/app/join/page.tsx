@@ -1,10 +1,9 @@
-// src/app/join/page.tsx など（JoinPage）
+// src/app/join/page.tsx
 'use client';
 
 import Header from '@/feature/Header/Header';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import GoLoginButton from '@/feature/GoLogin/GoLoginButton';
-import LogoutButton from '@/feature/Logout/LogoutButton';
 import JoinRoomForm from '@/feature/JoinRoomForm/JoinRoomForm';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -58,7 +57,6 @@ export default function JoinPage() {
         throw new Error(msg);
       }
 
-      // 成功したらそのルームのページへ（パスはお好みで）
       router.push(`/rooms/${room_id}`);
       return true;
     } catch (e: any) {
@@ -104,34 +102,29 @@ export default function JoinPage() {
   }
 
   return (
-    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
+    <div className="min-h-screen text-white relative flex flex-col" style={{ backgroundColor: '#144895' }}>
       <Header />
-      <div className="flex justify-center">
-        <main className="flex flex-col flex-1 items-center justify-center max-w-98 gap-4">
+      {/* フォームを縦横中央に */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6">
+        <div className="w-full max-w-98">
           <JoinRoomForm onSubmit={handleJoin} onValidChange={setIsValid} />
           {joinError && (
-            <p className="text-sm text-red-100/90 bg-red-500/20 rounded-md px-3 py-2">{joinError}</p>
+            <p className="text-sm text-red-100/90 bg-red-500/20 rounded-md px-3 py-2 mt-3">{joinError}</p>
           )}
-        </main>
-      </div>
+        </div>
+      </main>
 
-      {/* 既存の下部固定ボタン想定。form 属性でフォーム送信 */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
+      {/* 下部固定の送信ボタン */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full px-6">
         <button
           type="submit"
           form="join-form"
           disabled={!isValid || joining}
-          className="px-10 py-4 rounded-xl bg-cyan-400 text-blue-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-4 rounded-xl bg-cyan-400 text-blue-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed max-w-[500px] mx-auto"
         >
           {joining ? '参加中…' : '参加する'}
         </button>
       </div>
-
-      {data && (
-        <div className="fixed bottom-8 left-4">
-          <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />
-        </div>
-      )}
     </div>
   );
 }

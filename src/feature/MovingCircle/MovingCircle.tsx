@@ -1,7 +1,7 @@
 "use client"
 
-import { CircularProgressbar ,buildStyles} from 'react-circular-progressbar';
-import { CircularProgressbarWithChildren} from 'react-circular-progressbar';
+// import { CircularProgressbar ,buildStyles} from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren, buildStyles} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Image from "next/image";
 
@@ -10,7 +10,7 @@ type Props = { percentage: number };
 
 export default function MovingCircle ({percentage} : Props){
     return(
-        <div className="absolute w-[244px] h-[244px] top-[258px] left-1/2 -translate-x-1/2 transform rounded-[122px]">
+        <div className="absolute w-[244px] h-[244px] top-[250px] left-1/2 -translate-x-1/2 transform rounded-[122px]">
             <CircularProgressbarWithChildren value={percentage} strokeWidth={3}   styles={buildStyles({
     pathColor: `#1CE8FF`,
     trailColor: '#EAFDFFF',

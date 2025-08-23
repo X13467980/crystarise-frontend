@@ -52,7 +52,7 @@ export default function ProgressRing({
 
   return (
     <div
-      className={`relative`}
+      className={`relative ${className}`}
       style={{ width: size, height: size }}
     >
       <svg
@@ -85,10 +85,8 @@ export default function ProgressRing({
         />
       </svg>
 
-      {/* Optional inner content slot (put your snowflake image here) */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        {/* place whatever you want inside */}
-      </div>
+      {/* Optional inner content slot */}
+      <div className="absolute inset-0 flex items-center justify-center" />
     </div>
   );
 }

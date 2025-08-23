@@ -9,7 +9,7 @@ import MovingCircle from "@/feature/MovingCircle/MovingCircle";
 import { RoomDataGetMock } from "@/feature/hooks/rommData.mock";
 
 export default function SoloPage() {
-  const percentage = 80;
+  const percentage = 70;
   const data = RoomDataGetMock()
   return (
       

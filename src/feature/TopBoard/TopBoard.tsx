@@ -6,7 +6,7 @@ interface Props {
   goalUnit?: string
 }
 
-export default function TopBoard({ className = "" , roomName , goalName, goalNumber, goalUnit}: Props): JSX.Element {
+export default function TopBoard({ className = "" , roomName , goalName, goalNumber, goalUnit}: Props): React.ReactNode {
   return (
     <div className={`relative w-[383px] h-[216px] ${className}`}>
       <div className="absolute w-[360px] h-40 top-14 left-4 bg-[#e9fcff] rounded-[25px]" >

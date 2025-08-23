@@ -7,6 +7,7 @@ import StartButtons from '@/feature/StartButtons/StartButtons';
 import { useUserSummary } from '@/feature/hooks/useUserSummary';
 import LogoutButton from '@/feature/Logout/LogoutButton';
 import CrystalText from '@/feature/CrystalGrowText/CrystalGrowText';
+
 export default function HomePage() {
   const { data, loading, error } = useUserSummary();
 
@@ -65,7 +66,7 @@ export default function HomePage() {
       </main>
       </div>
       {data && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2">
+        <div>
           <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />
         </div>
       )}

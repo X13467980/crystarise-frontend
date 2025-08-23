@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 
 type Props = {
   onSubmit?: (payload: { roomId: string; password: string }) => Promise<boolean> | boolean;
@@ -17,7 +18,7 @@ export default function JoinRoomForm({
   defaultRoomId = '',
   defaultPassword = '',
   onValidChange,
-  formId = 'join-form',             // ← 追加
+  formId = 'join-form',
 }: Props) {
   const [roomId, setRoomId] = useState(defaultRoomId);
   const [password, setPassword] = useState(defaultPassword);
@@ -27,10 +28,10 @@ export default function JoinRoomForm({
   const isValid = roomId.trim().length > 0 && password.trim().length > 0;
 
   useEffect(() => {
-    if (onValidChange) onValidChange(isValid);
+    onValidChange?.(isValid);
   }, [isValid, onValidChange]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isValid || submitting) return;
     setSubmitting(true);
@@ -41,12 +42,16 @@ export default function JoinRoomForm({
         setRoomId('');
         setPassword('');
       }
-    } catch (err: any) {
-      setError(err?.message ?? '参加に失敗しました。時間をおいて再度お試しください。');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : '参加に失敗しました。時間をおいて再度お試しください。';
+      setError(msg);
     } finally {
       setSubmitting(false);
     }
-  }
+  };
+
+  const handleRoomIdChange = (e: ChangeEvent<HTMLInputElement>) => setRoomId(e.target.value);
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   return (
     <form id={formId} onSubmit={handleSubmit} className="w-full max-w-[720px] mx-auto">
@@ -63,7 +68,7 @@ export default function JoinRoomForm({
           autoComplete="one-time-code"
           placeholder="ルームID"
           value={roomId}
-          onChange={(e) => setRoomId(e.target.value)}
+          onChange={handleRoomIdChange}
           className="w-full rounded-2xl bg-[#dff7fb]/80 placeholder:text-slate-500 px-5 py-4 md:py-5
                      shadow-[0_2px_0_0_rgba(255,255,255,0.25)_inset,0_1px_8px_rgba(0,0,0,0.08)]
                      focus:outline-none focus:ring-4 focus:ring-cyan-300/40 focus:bg-white
@@ -78,7 +83,7 @@ export default function JoinRoomForm({
           autoComplete="current-password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           className="w-full rounded-2xl bg-[#dff7fb]/80 placeholder:text-slate-500 px-5 py-4 md:py-5
                      shadow-[0_2px_0_0_rgba(255,255,255,0.25)_inset,0_1px_8px_rgba(0,0,0,0.08)]
                      focus:outline-none focus:ring-4 focus:ring-cyan-300/40 focus:bg-white
@@ -92,6 +97,7 @@ export default function JoinRoomForm({
         </p>
       )}
 
+      {/* 送信は親の固定ボタン(form="join-form")で行う想定。ここにも隠しsubmitを置いておく */}
       <button type="submit" className="hidden" />
     </form>
   );

@@ -1,13 +1,9 @@
 'use client'
 
 import TopBoard from "@/feature/TopBoard/TopBoard";
-import { CircularProgressbar ,buildStyles} from 'react-circular-progressbar';
-import { CircularProgressbarWithChildren} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import Image from "next/image";
 import MovingCircle from "@/feature/MovingCircle/MovingCircle";
 import { RoomDataGetMock } from "@/feature/hooks/rommData.mock";
-import SoloRecord from "@/feature/SoloRecord/SoloRecord";
 import ProgressCard from "@/feature/ProgressCard/ProgressCard";
 import TeamRecordBtn from "@/feature/TeamRecordBtn/TeamRecordBtn";
 

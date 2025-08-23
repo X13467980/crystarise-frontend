@@ -1,3 +1,4 @@
+// src/app/solo/rooms/[room_id]/page.tsx
 'use client';
 
 import { useEffect, useMemo, useRef, useState, use as usePromise } from 'react';
@@ -37,6 +38,12 @@ export default function SoloRoomPage({
   // 同じ (room_id, token) の組み合わせでの多重フェッチを防ぐ
   const fetchedKeyRef = useRef<string | null>(null);
 
+  // validateToken を安定参照にして、依存配列に入れずにESLintを満たす
+  const validateTokenRef = useRef(validateToken);
+  useEffect(() => {
+    validateTokenRef.current = validateToken;
+  }, [validateToken]);
+
   const roomName   = room?.name ?? 'Room';
   const goalName   = room?.crystal?.title ?? 'Goal';
   const goalNumber = room?.crystal?.target_value ?? 0;
@@ -59,7 +66,7 @@ export default function SoloRoomPage({
         setLoading(true);
         setError(null);
 
-        const ok = await validateToken(); // 依存配列には入れない（関数参照の揺れで再実行しない）
+        const ok = await validateTokenRef.current(); // ← 安定参照経由で実行
         if (!ok) {
           if (!cancelled) {
             setError('ログインが必要です');
@@ -74,8 +81,11 @@ export default function SoloRoomPage({
         });
 
         if (!res.ok) {
-          const body = await res.json().catch(() => null);
-          const msg = body?.detail || `HTTP ${res.status}`;
+          const body: unknown = await res.json().catch(() => null);
+          const msg =
+            (typeof body === 'object' && body !== null && 'detail' in body
+              ? String((body as { detail?: string }).detail ?? '')
+              : '') || `HTTP ${res.status}`;
           throw new Error(msg);
         }
 
@@ -84,9 +94,10 @@ export default function SoloRoomPage({
           setRoom(data);
           setLoading(false);
         }
-      } catch (e: any) {
+      } catch (e: unknown) {
         if (!cancelled) {
-          setError(e?.message ?? '取得に失敗しました');
+          const msg = e instanceof Error ? e.message : '取得に失敗しました';
+          setError(msg);
           setLoading(false);
         }
       }
@@ -95,7 +106,7 @@ export default function SoloRoomPage({
     return () => {
       cancelled = true;
     };
-    // 依存は room_id と token のみに抑える（validateToken は入れない）
+    // 依存は room_id と token のみに抑える（validateToken は ref 化しているため不要）
   }, [room_id, token]);
 
   if (!token) {

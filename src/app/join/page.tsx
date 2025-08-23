@@ -13,11 +13,12 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000'
 export default function JoinPage() {
   const { data, loading, error } = useUserSummary();
   const router = useRouter();
+
   const [isValid, setIsValid] = useState(false);
   const [joining, setJoining] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
 
-  async function handleJoin({ roomId, password }: { roomId: string; password: string }) {
+  async function handleJoin({ roomId, password }: { roomId: string; password: string }): Promise<boolean> {
     setJoinError(null);
 
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
@@ -34,6 +35,7 @@ export default function JoinPage() {
 
     try {
       setJoining(true);
+
       const res = await fetch(`${API_BASE}/rooms/join`, {
         method: 'POST',
         headers: {
@@ -44,23 +46,33 @@ export default function JoinPage() {
       });
 
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
+        const body: unknown = await res.json().catch(() => ({}));
+        type ErrorBody = { detail?: unknown };
+
         const msg =
-          body?.detail ??
+          (typeof body === 'object' &&
+            body !== null &&
+            'detail' in body &&
+            (() => {
+              const detail = (body as ErrorBody).detail;
+              return typeof detail === 'string' ? detail : String(detail ?? '');
+            })()) ||
           (res.status === 401
             ? 'パスワードが違います。'
             : res.status === 404
-            ? 'ルームが見つかりません。'
-            : res.status === 409
-            ? 'このルームはソロ用で既に埋まっています。'
-            : '参加に失敗しました。');
-        throw new Error(msg);
+              ? 'ルームが見つかりません。'
+              : res.status === 409
+                ? 'このルームはソロ用で既に埋まっています。'
+                : '参加に失敗しました。');
+        setJoinError(msg);
+        return false;
       }
 
       router.push(`/rooms/${room_id}`);
       return true;
-    } catch (e: any) {
-      setJoinError(e?.message ?? '参加に失敗しました。');
+    } catch (e: unknown) {
+      console.error(e);
+      setJoinError(e instanceof Error ? e.message : 'Unknown error');
       return false;
     } finally {
       setJoining(false);
@@ -83,7 +95,7 @@ export default function JoinPage() {
       <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
         <Header />
         <main className="flex flex-col items-center justify-center px-6 py-16">
-          <p className="text-red-300">Error: {error}</p>
+          <p className="text-red-300">Error: {String(error)}</p>
         </main>
       </div>
     );
@@ -109,7 +121,9 @@ export default function JoinPage() {
         <div className="w-full max-w-98">
           <JoinRoomForm onSubmit={handleJoin} onValidChange={setIsValid} />
           {joinError && (
-            <p className="text-sm text-red-100/90 bg-red-500/20 rounded-md px-3 py-2 mt-3">{joinError}</p>
+            <p className="text-sm text-red-100/90 bg-red-500/20 rounded-md px-3 py-2 mt-3" role="alert">
+              {joinError}
+            </p>
           )}
         </div>
       </main>

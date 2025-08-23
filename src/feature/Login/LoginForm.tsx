@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
+type SignInResponse = {
+  access_token?: string;
+  detail?: string;
+};
+
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,7 +17,7 @@ const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
@@ -30,7 +35,7 @@ const LoginForm: React.FC = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const data = (await res.json()) as SignInResponse;
 
       if (!res.ok) {
         throw new Error(
@@ -47,8 +52,12 @@ const LoginForm: React.FC = () => {
 
       // 成功後に遷移（例：トップやダッシュボード）
       router.push('/home');
-    } catch (err: any) {
-      setError(err?.message ?? 'ログインに失敗しました。時間をおいて再度お試しください。');
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : 'ログインに失敗しました。時間をおいて再度お試しください。';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -64,7 +73,7 @@ const LoginForm: React.FC = () => {
             className="login-input w-full px-4"
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             required
             autoComplete="email"
             placeholder="メールアドレス"
@@ -75,7 +84,7 @@ const LoginForm: React.FC = () => {
             className="login-input w-full px-4"
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             required
             minLength={6}
             autoComplete="current-password"

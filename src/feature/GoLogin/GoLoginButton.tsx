@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 
 const GoLoginButton = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [_isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
   const handleLoginClick = () => {

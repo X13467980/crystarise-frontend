@@ -9,11 +9,17 @@ const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000'
 type RoomType = 'solo' | 'group';
 
 type Props = {
-  roomType: RoomType;   // ← 追加: 'solo' or 'group'
+  roomType: RoomType;   // 'solo' or 'group'
   name: string;         // rooms.name
   title: string;        // crystals.title
   targetValue: number;  // crystals.target_value
   unit: string;         // crystals.unit
+};
+
+type CreateRoomResponse = {
+  room_id?: number; // backend A
+  id?: number;      // backend B (念のため両対応)
+  detail?: string;
 };
 
 export default function NewRoomButton({ roomType, name, title, targetValue, unit }: Props) {
@@ -56,19 +62,27 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
         }),
       });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.detail || `HTTP ${res.status}`);
+      // 可能なら先に JSON を取得（失敗しても握りつぶさずメッセージ化）
+      let data: CreateRoomResponse | null = null;
+      try {
+        data = (await res.json()) as CreateRoomResponse;
+      } catch {
+        // 空や非JSONの場合は null のまま進める
       }
 
-      const data: { room_id?: number; id?: number } = await res.json();
-      const roomId = data.room_id ?? data.id;
+      if (!res.ok) {
+        const msg = (data && typeof data.detail === 'string') ? data.detail : `HTTP ${res.status}`;
+        throw new Error(msg);
+      }
+
+      const roomId = data?.room_id ?? data?.id;
       if (!roomId) throw new Error('Invalid response: room_id not found');
 
       router.push(`/rooms/${roomId}`);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('[NewRoomButton] create failed:', e);
-      alert(`作成に失敗しました: ${e.message ?? e}`);
+      const message = e instanceof Error ? e.message : String(e);
+      alert(`作成に失敗しました: ${message}`);
     } finally {
       setLoading(false);
     }

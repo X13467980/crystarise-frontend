@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+// グローバルCSS（App Routerはここでのみ許可）
+import 'react-circular-progressbar/dist/styles.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

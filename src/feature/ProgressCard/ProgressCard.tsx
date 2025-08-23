@@ -12,6 +12,7 @@ export default function ProgressCard() {
             src="/usericon.svg"
             width={32}
             height={32}
+            alt="icon"
             />
             <div className="ml-5 w-full h-2 bg-white/40 rounded-full overflow-hidden">
           <div

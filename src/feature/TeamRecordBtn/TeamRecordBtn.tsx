@@ -1,12 +1,18 @@
-'use client'
+'use client';
 
-import React from 'react';
-import Popup from 'reactjs-popup';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-const TeamRecordBtn = () => (
-  <Popup trigger={<button className="button"> Open Modal </button>} modal>
-    <span> Modal content </span>
-  </Popup>
-);
+export default function TeamRecordBtn() {
+  const router = useRouter();
 
-export default TeamRecordBtn 
+  return (
+    <button
+      onClick={() => router.push('/teamhomeinput')}
+      aria-label="記録入力へ"
+    >
+      <Image src="/recordbtn.svg" width={60} height={60} alt="RecordBtn" />
+    </button>
+  );
+}
+

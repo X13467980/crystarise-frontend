@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function TeamRoomChoiceBtn({
-    makeOne ='/teamnewroom',
+    makeOne ='/newroom',
     joinRoom = '/join',
     className = '',
 }: Props) {

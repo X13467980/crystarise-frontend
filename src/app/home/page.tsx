@@ -39,37 +39,41 @@ export default function HomePage() {
         <Header />
         <main className="flex flex-col items-center justify-center px-6 py-16">
           <p className="opacity-90">ログインしてください</p>
-          <GoLoginButton />
           <StartButtons />
         </main>
+          <div className="flex items-center mt-30 mx-8">
+            <GoLoginButton/>
+          </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen text-white relative" style={{ backgroundColor: '#144895' }}>
-      <Header />
-      <div className="flex justify-center">
-        <main className="flex flex-col flex-1 items-center justify-center max-w-98 gap-8">
-        <ProfileCard
-          displayName={data.displayName}
-          avatarUrl={data.avatarUrl}
-          soloCount={data.soloCount}
-          teamCount={data.teamCount}
-          badgeCount={data.badgeCount}
-          className="w-full max-w-md md:max-w-lg"
-        />
-        <CrystalText
-        className="mt-18"
-        />
-        <StartButtons />
-      </main>
+    <>
+      <div className='absolute inset-0' style={{ height: 'fit-content' }}>
+        <Header />
       </div>
-      {data && (
-        <div>
-          <LogoutButton className="px-3 py-2 text-sm whitespace-nowrap" />
+      <div className="min-h-screen text-white h-[100dvh]" style={{ backgroundColor: '#144895' }}>
+        <div className="h-full flex justify-center ">
+          <main className=" h-full flex flex-col justify-between pb-10">
+            <ProfileCard
+              displayName={data.displayName}
+              avatarUrl={data.avatarUrl}
+              soloCount={data.soloCount}
+              teamCount={data.teamCount}
+              badgeCount={data.badgeCount}
+              className="w-full max-w-md md:max-w-lg justify-center pt-28"
+            />
+            <div className='text-center'>
+              <CrystalText />
+              <StartButtons className='pt-4' />
+            </div>
+            <div className="flex items-center space-y-4 mx-">
+              <LogoutButton/>
+            </div>
+          </main>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

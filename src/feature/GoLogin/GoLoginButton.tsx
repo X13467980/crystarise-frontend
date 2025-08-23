@@ -14,13 +14,7 @@ const GoLoginButton = () => {
     router.push("/login");
   };
   return (
-    <div>
-      {/* {isLoggedIn ? (
-        <button onClick={handleLogoutClick} className="primary-btn ">ログアウト</button>
-      ) : ( */}
-        <button onClick={handleLoginClick} className="primary-btn ">ログイン</button>
-      {/* )} */}
-    </div>
+    <button onClick={handleLoginClick} className="primary-btn w-full">ログイン</button>
   );
 };
 

@@ -37,7 +37,7 @@ export default function LogoutButton({ className = '', confirm = true }: Props) 
     <button
       type="button"
       onClick={handleClick}
-      className={`primary-btn ${className}`}
+      className={`primary-btn w-full ${className}`}
       aria-label="ログアウト"
     >
       ログアウト

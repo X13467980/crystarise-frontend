@@ -1,3 +1,4 @@
+// src/app/new-room/group/page.tsx など（提示コードのファイル）
 'use client';
 
 import Header from '@/feature/Header/Header';
@@ -40,11 +41,13 @@ export default function NewRoomGroupPage() {
             </div>
           </div>
           <NewRoomButton
-            roomType="group"                 // ← グループ用: /rooms/group を叩く
+            roomType="group"
             name={roomName}
             title={goal}
             targetValue={Number(number) || 0}
             unit={unit}
+            /** 追加: 作成成功後は lobby へ */
+            redirectTo="/lobby/:room_id"
           />
         </main>
       </div>

@@ -16,11 +16,27 @@ type Props = {
   title: string;
   targetValue: number;
   unit: string;
+  /** 作成成功後の遷移先。例: "/lobby/:room_id"（:room_id は実IDに置換） */
+  redirectTo?: string;
+  className?: string;
 };
 
-type CreateRoomResponse = { room_id?: number; id?: number; detail?: string };
+type CreateRoomResponse = {
+  room_id?: number;
+  id?: number;
+  detail?: string;
+  password?: string;
+  room?: { id?: number; password?: string };
+};
 
-export default function NewRoomButton({ roomType, name, title, targetValue, unit }: Props) {
+export default function NewRoomButton({
+  roomType,
+  name,
+  title,
+  targetValue,
+  unit,
+  redirectTo,
+}: Props) {
   const router = useRouter();
   const { token, isAuthenticated, validateToken, logout } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -28,7 +44,8 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
   const handleClick = async () => {
     if (!name.trim()) return alert('ルーム名を入力してください');
     if (!title.trim()) return alert('目標タイトルを入力してください');
-    if (!Number.isFinite(targetValue) || targetValue <= 0) return alert('目標の数値は正の数で入力してください');
+    if (!Number.isFinite(targetValue) || targetValue <= 0)
+      return alert('目標の数値は正の数で入力してください');
     if (!unit.trim()) return alert('単位を入力してください');
 
     try {
@@ -49,30 +66,42 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
       });
 
       let data: CreateRoomResponse | null = null;
-      try { data = (await res.json()) as CreateRoomResponse; } catch {}
+      try {
+        data = (await res.json()) as CreateRoomResponse;
+      } catch {}
 
       if (!res.ok) {
         const msg = data?.detail ?? `HTTP ${res.status}`;
         throw new Error(msg);
       }
 
-      const roomId = data?.room_id ?? data?.id;
+      const roomId = data?.room_id ?? data?.id ?? data?.room?.id;
       if (!roomId) throw new Error('Invalid response: room_id not found');
 
-      // ★★★ ここが重要：遷移前に draft を保存（TopBoard 即時表示のため）
+      // ★ draft を保存して TopBoard を即時反映（roomType でキー分岐）
       try {
         sessionStorage.setItem(
-          `solo:room:${roomId}`,
+          `${roomType}:room:${roomId}`,
           JSON.stringify({
             roomName: name.trim(),
             goalName: title.trim(),
             goalNumber: Number(targetValue),
             goalUnit: unit.trim(),
+            roomPassword: data?.password ?? data?.room?.password ?? null,
           })
         );
       } catch {}
 
-      router.push(getRoomPath(roomType, roomId));
+      // ★ ここで redirectTo が指定されていれば最優先で遷移
+      if (redirectTo) {
+        const path =
+          redirectTo.includes(':room_id')
+            ? redirectTo.replace(':room_id', String(roomId))
+            : `${redirectTo}?room_id=${roomId}`;
+        router.push(path);
+      } else {
+        router.push(getRoomPath(roomType, roomId));
+      }
     } catch (e: unknown) {
       console.error('[NewRoomButton] create failed:', e);
       const message = e instanceof Error ? e.message : String(e);
@@ -84,7 +113,12 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
 
   return (
     <div>
-      <button type="button" className="primary-btn w-full" onClick={handleClick} disabled={loading}>
+      <button
+        type="button"
+        className="primary-btn w-full"
+        onClick={handleClick}
+        disabled={loading}
+      >
         {loading ? '作成中...' : roomType === 'solo' ? '一人で作成する' : 'みんなで作成する'}
       </button>
     </div>

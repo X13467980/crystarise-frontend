@@ -11,7 +11,7 @@ type Props = {
 
 export default function StartButtons({
   toFirst = '/firsttime',
-  toContinue = '/continue',
+  toContinue = '/guestlobby',
   className = '',
 }: Props) {
   const router = useRouter();

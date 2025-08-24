@@ -2,9 +2,7 @@
 import { useRouter } from 'next/navigation';
 
 type Props = {
-  /** 遷移先の roomId（必須） */
-  roomId: number | string;
-  /** ボタンラベル（任意） */
+  roomId: number | string;  // 必須（呼び出し元で必ず渡す）
   label?: string;
 };
 

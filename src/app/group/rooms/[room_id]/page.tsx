@@ -4,21 +4,24 @@ import { useEffect, useMemo, useRef, useState, use as usePromise } from 'react';
 import { useRouter } from 'next/navigation';
 import TopBoard from '@/feature/TopBoard/TopBoard';
 import MovingCircle from '@/feature/MovingCircle/MovingCircle';
-import SoloRecord from '@/feature/SoloRecord/SoloRecord';
+import GroupRecord from '@/feature/GroupRecord/GroupRecord';
 import { useAuth } from '@/feature/hooks/useAuth';
 
 export const dynamic = 'force-dynamic';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
+type CrystalLite = {
+  title: string;
+  target_value: number;
+  unit: string;
+};
+
 type RoomDetail = {
   id: number;
   name: string;
-  crystal?: {
-    title: string;
-    target_value: number;
-    unit: string;
-  };
+  crystal?: CrystalLite | null;
+  crystals?: CrystalLite[]; // API が配列で返す場合の互換
 };
 
 // 作成直後の入力値（ドラフト）を読む（ソロと同様の挙動）
@@ -33,8 +36,9 @@ function useDraft(roomId?: string) {
   useEffect(() => {
     if (!roomId) return;
     try {
-      const raw = sessionStorage.getItem(`team:room:${roomId}`) // ← 保存キーは team 用に分離
-        ?? sessionStorage.getItem(`solo:room:${roomId}`);       // ソロ作成直後に流用される可能性も考慮
+      const raw =
+        sessionStorage.getItem(`team:room:${roomId}`) ??
+        sessionStorage.getItem(`solo:room:${roomId}`);
       if (raw) setDraft(JSON.parse(raw));
     } catch {
       // 破損時は無視
@@ -42,6 +46,30 @@ function useDraft(roomId?: string) {
   }, [roomId]);
 
   return draft;
+}
+
+// crystal サマリーのフォールバック取得
+async function fetchCrystalSummary(roomId: string | number, token: string): Promise<CrystalLite | null> {
+  try {
+    const res = await fetch(
+      `${API_BASE}/crystals/by-room/${roomId}/summary`,
+      { headers: { Authorization: `Bearer ${token}`, accept: 'application/json' }, cache: 'no-store' }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    // 期待形へマッピング（APIが {title,target_value,unit} を返す前提）
+    if (data && typeof data === 'object') {
+      const title = (data.title ?? data.crystal_title) as string | undefined;
+      const target_value = Number(data.target_value ?? data.targetValue);
+      const unit = (data.unit ?? data.crystal_unit) as string | undefined;
+      if (title && !Number.isNaN(target_value) && unit) {
+        return { title, target_value, unit };
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 export default function GroupRoomPage({
@@ -72,10 +100,10 @@ export default function GroupRoomPage({
 
   const draft = useDraft(room_id);
 
-  const roomName   = room?.name ?? draft?.roomName ?? 'Group Room';
-  const goalName   = room?.crystal?.title ?? draft?.goalName ?? 'Group Goal';
-  const goalNumber = room?.crystal?.target_value ?? draft?.goalNumber ?? 0;
-  const goalUnit   = room?.crystal?.unit ?? draft?.goalUnit ?? '';
+  const roomName = room?.name ?? draft?.roomName ?? 'Group Room';
+  const goalName = (room?.crystal?.title ?? draft?.goalName) ?? 'Group Goal';
+  const goalNumber = (room?.crystal?.target_value ?? draft?.goalNumber) ?? 0;
+  const goalUnit = (room?.crystal?.unit ?? draft?.goalUnit) ?? '';
 
   const percentage = useMemo(() => {
     const pct = Math.max(0, Math.min(100, Math.round(progress)));
@@ -105,8 +133,9 @@ export default function GroupRoomPage({
           return;
         }
 
+        // 1) まずは /rooms/:id
         const res = await fetch(`${API_BASE}/rooms/${room_id}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, accept: 'application/json' },
           cache: 'no-store',
         });
 
@@ -119,12 +148,27 @@ export default function GroupRoomPage({
           throw new Error(msg);
         }
 
-        const data = (await res.json()) as RoomDetail;
-        if (!cancelled) {
-          setRoom(data);
-          setLoading(false);
+        const raw = (await res.json()) as RoomDetail;
+        // crystal が無い/配列などのケースを吸収
+        let crystal: CrystalLite | null | undefined =
+          raw.crystal ??
+          (Array.isArray(raw.crystals) && raw.crystals.length > 0 ? raw.crystals[0] : undefined);
 
-          if (data?.crystal) {
+        // 2) 無ければ /crystals/by-room/:id/summary をフォールバック
+        if (!crystal) {
+          crystal = await fetchCrystalSummary(room_id, token);
+        }
+
+        const normalized: RoomDetail = {
+          id: Number(raw.id),
+          name: raw.name ?? (draft?.roomName ?? 'Group Room'),
+          crystal: crystal ?? undefined,
+        };
+
+        if (!cancelled) {
+          setRoom(normalized);
+          setLoading(false);
+          if (normalized.crystal) {
             try {
               // team/solo どちらのキーも掃除
               sessionStorage.removeItem(`team:room:${room_id}`);
@@ -155,7 +199,7 @@ export default function GroupRoomPage({
           <p className="mb-4">ログインが必要です</p>
           <a
             href="/login"
-            className="inline-block bg-white/10 px-4 py-2 rounded-md hover:bg白/20 transition"
+            className="inline-block bg-white/10 px-4 py-2 rounded-md hover:bg-white/20 transition"
           >
             ログインページへ
           </a>
@@ -191,15 +235,14 @@ export default function GroupRoomPage({
   return (
     <div className="bg-[#144794] w-full min-h-screen flex justify-center">
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
-        {/* まずは SoloRecord を流用（将来的に GroupRecord に差し替え可） */}
-        <SoloRecord
+        <GroupRecord
           roomId={roomIdNum}
           goalNumber={goalNumber}
           goalUnit={goalUnit}
-          onSubmitted={(pct) => {
+          onSubmitted={(pct: number) => {
             setProgress(pct);
             if (pct === 100) {
-              router.push('/done100page'); // ソロと合わせる（必要に応じて nextdone100 に変更）
+              router.push('/done100page');
             }
           }}
         />

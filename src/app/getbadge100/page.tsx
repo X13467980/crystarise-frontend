@@ -18,10 +18,10 @@ export default function Done100Page() {
                     <RandomBadges />
                 </div>
                 <Link
-                    href="/getbadge100"
+                    href="/home"
                     className="primary-btn text-center space-y-4"
                 >
-                    次へ
+                    戻る
                 </Link>
                 </div>
             </div>

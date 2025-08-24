@@ -24,7 +24,7 @@ export default function Done100Page() {
                     alt="information"
                     />
                     <Link
-                        href="/nextdone100"
+                        href="/getbadge100"
                         className="primary-btn mt-4 text-center"
                     >
                         次へ

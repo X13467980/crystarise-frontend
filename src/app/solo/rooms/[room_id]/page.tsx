@@ -1,7 +1,7 @@
-// src/app/solo/rooms/[room_id]/page.tsx
 'use client';
 
 import { useEffect, useMemo, useRef, useState, use as usePromise } from 'react';
+import { useRouter } from 'next/navigation';  // ← 追加
 import TopBoard from '@/feature/TopBoard/TopBoard';
 import MovingCircle from '@/feature/MovingCircle/MovingCircle';
 import SoloRecord from '@/feature/SoloRecord/SoloRecord';
@@ -21,13 +21,37 @@ type RoomDetail = {
   };
 };
 
+// 作成直後の入力値（ドラフト）を読むための小さなフック
+function useDraft(roomId?: string) {
+  const [draft, setDraft] = useState<{
+    roomName?: string;
+    goalName?: string;
+    goalNumber?: number;
+    goalUnit?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!roomId) return;
+    try {
+      const raw = sessionStorage.getItem(`solo:room:${roomId}`);
+      if (raw) setDraft(JSON.parse(raw));
+    } catch {
+      // 破損時は無視
+    }
+  }, [roomId]);
+
+  return draft;
+}
+
 export default function SoloRoomPage({
   params,
 }: {
   params: Promise<{ room_id: string }>;
 }) {
-  // Next.js 15: params は Promise。React.use()で unwrap
   const { room_id } = usePromise(params);
+  const roomIdNum = Number(room_id);
+
+  const router = useRouter(); // ← 追加
 
   const { token, validateToken } = useAuth();
 
@@ -35,28 +59,33 @@ export default function SoloRoomPage({
   const [room, setRoom] = useState<RoomDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 同じ (room_id, token) の組み合わせでの多重フェッチを防ぐ
+  // ★ 追加: 進捗％の状態（POST 返却値を反映）
+  const [progress, setProgress] = useState<number>(0);
+
   const fetchedKeyRef = useRef<string | null>(null);
 
-  // validateToken を安定参照にして、依存配列に入れずにESLintを満たす
   const validateTokenRef = useRef(validateToken);
   useEffect(() => {
     validateTokenRef.current = validateToken;
   }, [validateToken]);
 
-  const roomName   = room?.name ?? 'Room';
-  const goalName   = room?.crystal?.title ?? 'Goal';
-  const goalNumber = room?.crystal?.target_value ?? 0;
-  const goalUnit   = room?.crystal?.unit ?? '';
+  const draft = useDraft(room_id);
 
-  const percentage = useMemo(() => (goalNumber > 0 ? 70 : 0), [goalNumber]);
+  const roomName   = room?.name ?? draft?.roomName ?? 'Room';
+  const goalName   = room?.crystal?.title ?? draft?.goalName ?? 'Goal';
+  const goalNumber = room?.crystal?.target_value ?? draft?.goalNumber ?? 0;
+  const goalUnit   = room?.crystal?.unit ?? draft?.goalUnit ?? '';
+
+  const percentage = useMemo(() => {
+    const pct = Math.max(0, Math.min(100, Math.round(progress)));
+    return pct;
+  }, [progress]);
 
   useEffect(() => {
-    // token未確定 or room_id未確定の間は何もしない（無駄なloading切り替え防止）
     if (!room_id || !token) return;
 
     const key = `${room_id}:${token}`;
-    if (fetchedKeyRef.current === key) return; // 既に同じ条件でフェッチ済みならスキップ
+    if (fetchedKeyRef.current === key) return;
     fetchedKeyRef.current = key;
 
     let cancelled = false;
@@ -66,7 +95,7 @@ export default function SoloRoomPage({
         setLoading(true);
         setError(null);
 
-        const ok = await validateTokenRef.current(); // ← 安定参照経由で実行
+        const ok = await validateTokenRef.current();
         if (!ok) {
           if (!cancelled) {
             setError('ログインが必要です');
@@ -93,6 +122,14 @@ export default function SoloRoomPage({
         if (!cancelled) {
           setRoom(data);
           setLoading(false);
+
+          if (data?.crystal) {
+            try {
+              sessionStorage.removeItem(`solo:room:${room_id}`);
+            } catch {
+              // noop
+            }
+          }
         }
       } catch (e: unknown) {
         if (!cancelled) {
@@ -106,11 +143,9 @@ export default function SoloRoomPage({
     return () => {
       cancelled = true;
     };
-    // 依存は room_id と token のみに抑える（validateToken は ref 化しているため不要）
-  }, [room_id, token]);
+  }, [room_id, token, roomIdNum]);
 
   if (!token) {
-    // 自動遷移せず、静的に促す（チカチカ防止）
     return (
       <div className="bg-[#144794] w-full min-h-screen flex items-center justify-center">
         <div className="text-center text-white">
@@ -153,8 +188,20 @@ export default function SoloRoomPage({
   return (
     <div className="bg-[#144794] w-full min-h-screen flex justify-center" data-model-id="33:148">
       <div className="bg-[#144794] w-full max-w-[393px] min-h-[852px] relative">
-        <SoloRecord goalNumber={goalNumber} goalUnit={goalUnit} />
+        <SoloRecord
+          roomId={roomIdNum}
+          goalNumber={goalNumber}
+          goalUnit={goalUnit}
+          onSubmitted={(pct) => {
+            setProgress(pct);
+            if (pct === 100) {
+              router.push('/done100page'); // ← ここでリダイレクト
+            }
+          }}
+        />
+
         <MovingCircle percentage={percentage} />
+
         <TopBoard
           className="!absolute !left-1/2 !transform !-translate-x-1/2 !top-4"
           roomName={roomName}

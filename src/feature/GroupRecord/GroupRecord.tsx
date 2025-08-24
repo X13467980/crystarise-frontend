@@ -6,17 +6,17 @@ import { useAuth } from "@/feature/hooks/useAuth";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 type Props = {
-  roomId: number;                 // ★ どのルームか（＝ by-room の :room_id ）
+  roomId: number;                 // 必須: どのルームか
   goalNumber?: number;
   goalUnit?: string;
-  onSubmitted?: (percent: number) => void; // ★ 進捗％を親へ
+  onSubmitted?: (percent: number) => void; // 進捗％を親に返す
 };
 
-export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }: Props) {
+export default function GroupRecord({ roomId, goalNumber, goalUnit, onSubmitted }: Props) {
   const [value, setValue] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
-  const { token } = useAuth(); // ★ JWT
+  const { token } = useAuth(); // JWT
 
   const extractError = async (r: Response) => {
     try {
@@ -37,7 +37,7 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
 
     setLoading(true);
     try {
-      // ★ ここを crystal_id エンドポイントから「by-room」に変更
+      // ★ グループは room_id ベースのエンドポイントを利用
       const res = await fetch(`${API_BASE}/crystals/by-room/${roomId}/records`, {
         method: "POST",
         headers: {
@@ -53,17 +53,22 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
         throw new Error(msg);
       }
 
-      // バックエンドは { record, summary } を返す想定
+      // 返却 1) 数値のみ（レガシー）
+      //     2) { percent?: number, summary?: { progress_rate } } のオブジェクト
       const data = await res.json();
-      // 互換: 数値だけ返ってきた場合にも対応
+
       let percent = 0;
       if (typeof data === "number") {
         percent = Math.max(0, Math.min(100, Math.round(data)));
+      } else if (data?.percent != null) {
+        percent = Math.max(0, Math.min(100, Math.round(Number(data.percent))));
       } else if (data?.summary?.progress_rate != null) {
         const rate = Number(data.summary.progress_rate);
         percent = Math.max(0, Math.min(100, Math.round(rate * 100)));
       }
+      if (!Number.isFinite(percent)) percent = 0;
 
+      // console.debug('[GroupRecord] onSubmitted percent =', percent);
       onSubmitted?.(percent);
       setValue("");
       setNote("");
@@ -77,7 +82,7 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
 
   return (
     <div className="absolute w-[260px] h-[290px] top-[529px] left-1/2 transform -translate-x-1/2 bg-[#e9fcff] rounded-[25px] border border-solid border-[#1be8ff] p-3">
-      <div className="w-full text-center text-[#144794] text-base mb-2">努力の記録を入力しよう</div>
+      <div className="w-full text-center text-[#144794] text-base mb-2">チームの努力を記録しよう</div>
 
       <div className="flex items-center gap-3 mb-2">
         <input
@@ -98,7 +103,7 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
 
       <input
         className="w-full h-10 bg-white rounded-[10px] border border-solid border-[#c8eaf0] px-3 mb-3"
-        placeholder="メモ（任意）"
+        placeholder="メンションやメモ（任意）"
         value={note}
         onChange={(e) => setNote(e.target.value)}
         disabled={loading}

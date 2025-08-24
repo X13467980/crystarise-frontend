@@ -1,3 +1,4 @@
+// src/app/newroom/_components/NewRoomForm.tsx
 'use client';
 
 import Header from '@/feature/Header/Header';
@@ -9,7 +10,7 @@ import React, { useState } from 'react';
 type RoomType = 'solo' | 'group';
 
 interface NewRoomFormProps {
-  roomType: RoomType; // 'solo' or 'group'
+  roomType: RoomType;
 }
 
 export default function NewRoomForm({ roomType }: NewRoomFormProps) {
@@ -28,10 +29,7 @@ export default function NewRoomForm({ roomType }: NewRoomFormProps) {
           <div className='h-full flex flex-col justify-center'>
             <div className="w-full flex flex-col items-center space-y-4 pb-10">
               <p className="text-[var(--secondary)]">ルーム名を入力する</p>
-              <NewRoomInput
-                value={roomName}
-                onChange={setRoomName}
-              />
+              <NewRoomInput value={roomName} onChange={setRoomName} />
             </div>
             <div className="w-full flex flex-col items-center space-y-4">
               <p className="text-[var(--secondary)]">目標を入力する</p>
@@ -46,7 +44,7 @@ export default function NewRoomForm({ roomType }: NewRoomFormProps) {
             </div>
           </div>
           <NewRoomButton
-            roomType={roomType}                 // ★ ここで種別を渡す
+            roomType={roomType}
             name={roomName}
             title={goal}
             targetValue={Number(number) || 0}

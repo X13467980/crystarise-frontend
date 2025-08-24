@@ -1,4 +1,3 @@
-
 'use client';
 
 import Image from "next/image";
@@ -20,24 +19,22 @@ export default function TopBoard({
 }: Props) {
   return (
     <div className={`relative w-[383px] h-[216px] overflow-hidden ${className}`}>
-      {/* Background image fills the wrapper */}
       <Image
         src="/topboard.svg"
-        alt=""                    // decorative bg
+        alt=""
         fill
         sizes="383px"
         className="absolute inset-0 object-cover -z-10 pointer-events-none"
         priority
       />
 
-      {/* Foreground content */}
       <div className="absolute w-[360px] h-40 top-14 left-4 bg-[#e9fcff] rounded-[25px] z-10">
-        <div className="absolute top-[19px] left-[130px] text-2xl text-center whitespace-nowrap font-mkpop text-[#144794]">
-          <p>{roomName}</p>
+        <div className="absolute top-[19px] left-1/2 -translate-x-1/2 max-w-[320px] px-2 text-2xl text-center truncate font-mkpop text-[#144794]">
+          <p title={roomName}>{roomName}</p>
         </div>
 
         <div className="absolute w-[100px] h-20 top-[57px] left-[22px] bg-[#f7feff] rounded-[10px] border border-solid border-[#1be8ff]">
-          <div className="absolute w-20 top-2 left-[9px] text-base font-mkpop text-[#144794]">
+          <div className="absolute w-20 top-2 left-[9px] text-base font-mkpop text-[#144794] break-words">
             {goalName}
           </div>
         </div>

@@ -253,7 +253,7 @@ export default function LobbyPage({
           className="mx-auto w-full max-w-[480px] px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+12px)]
                      bg-[#144895]/80 backdrop-blur supports-[backdrop-filter]:bg-[#144895]/60"
         >
-          <StartTeamBtn />
+          <StartTeamBtn roomId={roomId} />
           {showLoginBanner && (
             <div className="mt-2 text-center text-sm text-white/90">
               このルームの最新情報を見るにはログインが必要です。{' '}

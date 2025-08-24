@@ -9,18 +9,28 @@ import { getRoomPath } from '@/lib/routes';
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
 type RoomType = 'solo' | 'group';
-
+git add . && git commit -m "Feat: support redirectTo in NewRoomButton for lobby transition" && git push
 type Props = {
   roomType: RoomType;
   name: string;
   title: string;
   targetValue: number;
   unit: string;
+  /** 作成成功後に強制的に遷移するパス（例: "/lobby"） */
+  redirectTo?: string;
+  className?: string;
 };
 
 type CreateRoomResponse = { room_id?: number; id?: number; detail?: string };
 
-export default function NewRoomButton({ roomType, name, title, targetValue, unit }: Props) {
+export default function NewRoomButton({
+  roomType,
+  name,
+  title,
+  targetValue,
+  unit,
+  redirectTo,
+}: Props) {
   const router = useRouter();
   const { token, isAuthenticated, validateToken, logout } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -28,7 +38,8 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
   const handleClick = async () => {
     if (!name.trim()) return alert('ルーム名を入力してください');
     if (!title.trim()) return alert('目標タイトルを入力してください');
-    if (!Number.isFinite(targetValue) || targetValue <= 0) return alert('目標の数値は正の数で入力してください');
+    if (!Number.isFinite(targetValue) || targetValue <= 0)
+      return alert('目標の数値は正の数で入力してください');
     if (!unit.trim()) return alert('単位を入力してください');
 
     try {
@@ -49,7 +60,9 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
       });
 
       let data: CreateRoomResponse | null = null;
-      try { data = (await res.json()) as CreateRoomResponse; } catch {}
+      try {
+        data = (await res.json()) as CreateRoomResponse;
+      } catch {}
 
       if (!res.ok) {
         const msg = data?.detail ?? `HTTP ${res.status}`;
@@ -59,7 +72,7 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
       const roomId = data?.room_id ?? data?.id;
       if (!roomId) throw new Error('Invalid response: room_id not found');
 
-      // ★★★ ここが重要：遷移前に draft を保存（TopBoard 即時表示のため）
+      // ★ draft を保存して TopBoard を即時反映
       try {
         sessionStorage.setItem(
           `solo:room:${roomId}`,
@@ -72,7 +85,12 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
         );
       } catch {}
 
-      router.push(getRoomPath(roomType, roomId));
+      // ★ ここで redirectTo が指定されていれば最優先で遷移
+      if (redirectTo) {
+        router.push(`${redirectTo}?room_id=${roomId}`);
+      } else {
+        router.push(getRoomPath(roomType, roomId));
+      }
     } catch (e: unknown) {
       console.error('[NewRoomButton] create failed:', e);
       const message = e instanceof Error ? e.message : String(e);
@@ -84,7 +102,12 @@ export default function NewRoomButton({ roomType, name, title, targetValue, unit
 
   return (
     <div>
-      <button type="button" className="primary-btn w-full" onClick={handleClick} disabled={loading}>
+      <button
+        type="button"
+        className="primary-btn w-full"
+        onClick={handleClick}
+        disabled={loading}
+      >
         {loading ? '作成中...' : roomType === 'solo' ? '一人で作成する' : 'みんなで作成する'}
       </button>
     </div>

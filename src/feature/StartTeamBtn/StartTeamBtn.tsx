@@ -1,15 +1,19 @@
-'use client'
-import { useRouter } from "next/navigation"
+'use client';
+import { useRouter } from 'next/navigation';
 
+export default function StartTeamBtn() {
+  const router = useRouter();
 
-export default function StartTeamBtn () {
-    const Router = useRouter()
-
-    return (
-            <div className="w-full flex justify-center">
-                <div className="">
-                    <button className="primary-btn min-w-70" onClick={Router.push("/team")}>開始する</button>
-                </div>
-            </div>
-    )
+  return (
+    <div className="w-full flex justify-center">
+      <div>
+        <button
+          className="primary-btn min-w-[70px]"
+          onClick={() => router.push('/team')}
+        >
+          開始する
+        </button>
+      </div>
+    </div>
+  );
 }

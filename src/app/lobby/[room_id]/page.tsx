@@ -27,21 +27,17 @@ export default function LobbyPage({
   const roomId = Number(room_id);
 
   const router = useRouter();
-  const { token, isAuthenticated, validateToken /* , logout */ } = useAuth();
+  const { token, isAuthenticated, validateToken } = useAuth();
 
   const [room, setRoom] = useState<RoomDetail | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // ★ 追加：Auth の検証完了フラグ
   const [authChecked, setAuthChecked] = useState(false);
 
-  // 0) 認証検証（ここで logout や push はしない）
+  // 0) 認証検証（ここではリダイレクトしない）
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
-        // useAuth 実装によっては isAuthenticated が初期 false のことがあるため、
-        // validateToken を必ず一度実行して「確定させる」
         await validateToken();
       } finally {
         if (!cancelled) setAuthChecked(true);
@@ -52,7 +48,7 @@ export default function LobbyPage({
     };
   }, [validateToken]);
 
-  // 1) draft 即時表示
+  // 1) draft 即時表示（認証不要）
   useEffect(() => {
     if (!roomId) return;
     const keys = [`solo:room:${roomId}`, `group:room:${roomId}`];
@@ -82,7 +78,7 @@ export default function LobbyPage({
   // 2) 正式データ取得（403時は join → 再フェッチ）
   useEffect(() => {
     if (!roomId) return;
-    if (!authChecked) return;               // ★ Auth 検証が終わるまで待つ
+    if (!authChecked) return; // 認証検証完了まで待つ
 
     let aborted = false;
 
@@ -95,16 +91,14 @@ export default function LobbyPage({
     (async () => {
       setLoading(true);
       try {
-        // 未ログインなら API 叩かず UI 側で案内
-        if (!isAuthenticated || !token) {
-          return;
-        }
+        // 未ログインなら API は叩かずドラフトのみ表示を継続
+        if (!isAuthenticated || !token) return;
 
         let res = await fetchRoom();
 
         if (res.status === 403) {
           try {
-            // draft からパスワード検索
+            // draft からパスワードを探す
             const keys = [`solo:room:${roomId}`, `group:room:${roomId}`];
             let roomPassword: string | null = null;
             for (const key of keys) {
@@ -159,7 +153,6 @@ export default function LobbyPage({
       } catch (e) {
         if (!aborted) {
           console.error('[Lobby] fetch room failed:', e);
-          // 未ログインで来る 401/403 はここではアラート出さない（静かに UI 案内）
         }
       } finally {
         if (!aborted) setLoading(false);
@@ -181,21 +174,7 @@ export default function LobbyPage({
     []
   );
 
-  // === 未ログイン時の表示（自動リダイレクトしない） ===
-  if (authChecked && (!isAuthenticated || !token)) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <Header />
-        <p className="text-white/90">このルームを見るにはログインが必要です。</p>
-        <button
-          className="primary-btn"
-          onClick={() => router.push('/login')}
-        >
-          ログインする
-        </button>
-      </div>
-    );
-  }
+  const showLoginBanner = authChecked && (!isAuthenticated || !token);
 
   return (
     <div className="relative min-h-screen">
@@ -228,6 +207,17 @@ export default function LobbyPage({
                      bg-[#144895]/80 backdrop-blur supports-[backdrop-filter]:bg-[#144895]/60"
         >
           <StartTeamBtn />
+          {showLoginBanner && (
+            <div className="mt-2 text-center text-sm text-white/90">
+              このルームの最新情報を見るにはログインが必要です。{' '}
+              <button
+                className="underline underline-offset-2"
+                onClick={() => router.push('/login')}
+              >
+                ログインする
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

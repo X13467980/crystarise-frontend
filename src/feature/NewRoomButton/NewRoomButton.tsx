@@ -9,7 +9,7 @@ import { getRoomPath } from '@/lib/routes';
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';
 
 type RoomType = 'solo' | 'group';
-git add . && git commit -m "Feat: support redirectTo in NewRoomButton for lobby transition" && git push
+
 type Props = {
   roomType: RoomType;
   name: string;

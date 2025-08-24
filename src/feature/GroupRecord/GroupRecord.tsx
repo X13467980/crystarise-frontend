@@ -53,8 +53,22 @@ export default function GroupRecord({ roomId, goalNumber, goalUnit, onSubmitted 
         throw new Error(msg);
       }
 
-      // 返却は数値（整数%）を想定
-      const percent: number = await res.json();
+      // 返却 1) 数値のみ（レガシー）
+      //     2) { percent?: number, summary?: { progress_rate } } のオブジェクト
+      const data = await res.json();
+
+      let percent = 0;
+      if (typeof data === "number") {
+        percent = Math.max(0, Math.min(100, Math.round(data)));
+      } else if (data?.percent != null) {
+        percent = Math.max(0, Math.min(100, Math.round(Number(data.percent))));
+      } else if (data?.summary?.progress_rate != null) {
+        const rate = Number(data.summary.progress_rate);
+        percent = Math.max(0, Math.min(100, Math.round(rate * 100)));
+      }
+      if (!Number.isFinite(percent)) percent = 0;
+
+      // console.debug('[GroupRecord] onSubmitted percent =', percent);
       onSubmitted?.(percent);
       setValue("");
       setNote("");

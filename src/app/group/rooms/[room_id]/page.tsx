@@ -57,7 +57,6 @@ async function fetchCrystalSummary(roomId: string | number, token: string): Prom
     );
     if (!res.ok) return null;
     const data = await res.json();
-    // 期待形へマッピング（APIが {title,target_value,unit} を返す前提）
     if (data && typeof data === 'object') {
       const title = (data.title ?? data.crystal_title) as string | undefined;
       const target_value = Number(data.target_value ?? data.targetValue);
@@ -87,7 +86,7 @@ export default function GroupRoomPage({
   const [room, setRoom] = useState<RoomDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 進捗％（POSTの返却値を反映）
+  // 進捗％（POST/サマリーの返却値を反映）
   const [progress, setProgress] = useState<number>(0);
 
   const fetchedKeyRef = useRef<string | null>(null);
@@ -149,6 +148,7 @@ export default function GroupRoomPage({
         }
 
         const raw = (await res.json()) as RoomDetail;
+
         // crystal が無い/配列などのケースを吸収
         let crystal: CrystalLite | null | undefined =
           raw.crystal ??
@@ -167,6 +167,24 @@ export default function GroupRoomPage({
 
         if (!cancelled) {
           setRoom(normalized);
+
+          // ★ 初期％を summary から反映
+          try {
+            const sum = await fetch(`${API_BASE}/crystals/by-room/${room_id}/summary`, {
+              headers: { Authorization: `Bearer ${token}`, accept: 'application/json' },
+              cache: 'no-store',
+            });
+            if (sum.ok) {
+              const sdata = await sum.json();
+              const rate = Number(sdata?.progress_rate ?? 0);
+              const pctInit = Math.max(0, Math.min(100, Math.round(rate * 100)));
+              setProgress(pctInit);
+              // console.debug('[GroupRoom] init percent =', pctInit);
+            }
+          } catch {
+            // noop
+          }
+
           setLoading(false);
           if (normalized.crystal) {
             try {

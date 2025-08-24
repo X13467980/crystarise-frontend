@@ -1,4 +1,3 @@
-// src/feature/SoloRecord/SoloRecord.tsx
 'use client';
 
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { useAuth } from "@/feature/hooks/useAuth";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 type Props = {
-  roomId: number;                 // ★ どのルームか
+  roomId: number;                 // ★ どのルームか（＝ by-room の :room_id ）
   goalNumber?: number;
   goalUnit?: string;
   onSubmitted?: (percent: number) => void; // ★ 進捗％を親へ
@@ -19,6 +18,15 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
   const [loading, setLoading] = useState(false);
   const { token } = useAuth(); // ★ JWT
 
+  const extractError = async (r: Response) => {
+    try {
+      const data = await r.clone().json();
+      return (data as any)?.detail ?? (data as any)?.error ?? (data as any)?.message ?? JSON.stringify(data);
+    } catch {
+      return await r.text();
+    }
+  };
+
   const submit = async () => {
     const v = Number(value);
     if (value === "" || Number.isNaN(v)) return;
@@ -29,7 +37,8 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/crystals/${roomId}/records`, {
+      // ★ ここを crystal_id エンドポイントから「by-room」に変更
+      const res = await fetch(`${API_BASE}/crystals/by-room/${roomId}/records`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,24 +48,23 @@ export default function SoloRecord({ roomId, goalNumber, goalUnit, onSubmitted }
         body: JSON.stringify({ value: v, note: note || undefined }),
       });
 
-      // エラー時のメッセージ抽出（[object Object]対策）
-      const extractError = async (r: Response) => {
-        try {
-          const data = await r.clone().json();
-          return (data as any)?.detail ?? (data as any)?.error ?? (data as any)?.message ?? JSON.stringify(data);
-        } catch {
-          return await r.text();
-        }
-      };
-
       if (!res.ok) {
         const msg = await extractError(res);
         throw new Error(msg);
       }
 
-      // 返却は整数（例: 37）。JSONとしてそのまま数値が返ってくる想定
-      const percent: number = await res.json();
-      onSubmitted?.(percent);   // ★ 親に進捗％を渡す
+      // バックエンドは { record, summary } を返す想定
+      const data = await res.json();
+      // 互換: 数値だけ返ってきた場合にも対応
+      let percent = 0;
+      if (typeof data === "number") {
+        percent = Math.max(0, Math.min(100, Math.round(data)));
+      } else if (data?.summary?.progress_rate != null) {
+        const rate = Number(data.summary.progress_rate);
+        percent = Math.max(0, Math.min(100, Math.round(rate * 100)));
+      }
+
+      onSubmitted?.(percent);
       setValue("");
       setNote("");
     } catch (e: any) {

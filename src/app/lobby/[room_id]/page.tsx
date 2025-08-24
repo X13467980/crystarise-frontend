@@ -136,20 +136,67 @@ export default function LobbyPage({
         }
 
         const data = (await res.json()) as any;
-        const normalized: RoomDetail = {
-          id: data?.id ?? roomId,
-          name: data?.name ?? '',
-          password: data?.password ?? data?.room?.password ?? null,
-          crystal: data?.crystal
-            ? {
-                title: data.crystal.title ?? '',
-                target_value: Number(data.crystal.target_value ?? 0),
-                unit: data.crystal.unit ?? '',
-              }
-            : undefined,
-        };
 
-        if (!aborted) setRoom(normalized);
+        // ★★★ 空値で既存表示を壊さない「マージ更新」
+        const update: Partial<RoomDetail> = {};
+
+        if (typeof data?.name === 'string' && data.name.trim() !== '') {
+          update.name = data.name;
+        }
+
+        if ('password' in (data ?? {}) || data?.room?.password !== undefined) {
+          update.password = data?.password ?? data?.room?.password ?? null;
+        }
+
+        if (data?.crystal) {
+          const uCrystal: RoomDetail['crystal'] = { title: '', target_value: 0, unit: '' };
+          if (typeof data.crystal.title === 'string' && data.crystal.title.trim() !== '') {
+            uCrystal.title = data.crystal.title;
+          }
+          if (data.crystal.target_value !== undefined && data.crystal.target_value !== null) {
+            uCrystal.target_value = Number(data.crystal.target_value);
+          }
+          if (typeof data.crystal.unit === 'string' && data.crystal.unit.trim() !== '') {
+            uCrystal.unit = data.crystal.unit;
+          }
+          update.crystal = uCrystal;
+        }
+
+        if (!aborted) {
+          setRoom((prev) => {
+            const merged: RoomDetail = {
+              id: prev?.id ?? roomId,
+              name: update.name ?? prev?.name ?? '',
+              password:
+                (update.password !== undefined ? update.password : prev?.password) ?? null,
+              crystal: {
+                title:
+                  (update.crystal?.title && update.crystal.title.trim() !== ''
+                    ? update.crystal.title
+                    : prev?.crystal?.title ?? ''),
+                target_value:
+                  update.crystal?.target_value !== undefined
+                    ? (update.crystal.target_value as number)
+                    : (prev?.crystal?.target_value ?? 0),
+                unit:
+                  (update.crystal?.unit && update.crystal.unit.trim() !== ''
+                    ? update.crystal.unit
+                    : prev?.crystal?.unit ?? ''),
+              },
+            };
+
+            // もし update.crystal が全て空で、prev.crystal があるなら prev を優先
+            const updateHasAnyCrystal =
+              update.crystal?.title ||
+              update.crystal?.unit ||
+              update.crystal?.target_value !== undefined;
+            if (!updateHasAnyCrystal && prev?.crystal) {
+              merged.crystal = prev.crystal;
+            }
+
+            return merged;
+          });
+        }
       } catch (e) {
         if (!aborted) {
           console.error('[Lobby] fetch room failed:', e);

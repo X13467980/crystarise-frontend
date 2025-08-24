@@ -68,7 +68,7 @@ export default function HomePage() {
               <CrystalText />
               <StartButtons className='pt-4' />
             </div>
-            <div className="flex items-center space-y-4 mx-">
+            <div className="flex items-center space-y-4">
               <LogoutButton/>
             </div>
           </main>

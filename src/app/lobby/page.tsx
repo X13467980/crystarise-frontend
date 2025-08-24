@@ -170,8 +170,6 @@ export default function Lobby() {
     return (
         <div className="relative min-h-screen">
             <Header />
-
-            {/* 下部固定ボタンに被らない余白 */}
             <div className="pb-28 [padding-bottom:calc(env(safe-area-inset-bottom)+7rem)]">
                 <div className="flex justify-center">
                     <TopBoard
@@ -190,8 +188,6 @@ export default function Lobby() {
                     <UserCircleList users={sampleUsers} />
                 </div>
             </div>
-
-            {/* === 画面下部固定バー === */}
             <div className="fixed bottom-0 inset-x-0 z-50 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] bg-[#144895]/80 backdrop-blur">
                 <StartTeamBtn />
             </div>

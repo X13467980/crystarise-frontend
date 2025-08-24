@@ -47,7 +47,7 @@ export default function NewRoomGroupPage() {
             targetValue={Number(number) || 0}
             unit={unit}
             /** 追加: 作成成功後は lobby へ */
-            redirectTo="/lobby"
+            redirectTo="/lobby/:room_id"
           />
         </main>
       </div>

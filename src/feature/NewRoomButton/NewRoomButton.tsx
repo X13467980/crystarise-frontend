@@ -16,12 +16,18 @@ type Props = {
   title: string;
   targetValue: number;
   unit: string;
-  /** 作成成功後に強制的に遷移するパス（例: "/lobby"） */
+  /** 作成成功後の遷移先。例: "/lobby/:room_id"（:room_id は実IDに置換） */
   redirectTo?: string;
   className?: string;
 };
 
-type CreateRoomResponse = { room_id?: number; id?: number; detail?: string };
+type CreateRoomResponse = {
+  room_id?: number;
+  id?: number;
+  detail?: string;
+  password?: string;
+  room?: { id?: number; password?: string };
+};
 
 export default function NewRoomButton({
   roomType,
@@ -69,25 +75,30 @@ export default function NewRoomButton({
         throw new Error(msg);
       }
 
-      const roomId = data?.room_id ?? data?.id;
+      const roomId = data?.room_id ?? data?.id ?? data?.room?.id;
       if (!roomId) throw new Error('Invalid response: room_id not found');
 
-      // ★ draft を保存して TopBoard を即時反映
+      // ★ draft を保存して TopBoard を即時反映（roomType でキー分岐）
       try {
         sessionStorage.setItem(
-          `solo:room:${roomId}`,
+          `${roomType}:room:${roomId}`,
           JSON.stringify({
             roomName: name.trim(),
             goalName: title.trim(),
             goalNumber: Number(targetValue),
             goalUnit: unit.trim(),
+            roomPassword: data?.password ?? data?.room?.password ?? null,
           })
         );
       } catch {}
 
       // ★ ここで redirectTo が指定されていれば最優先で遷移
       if (redirectTo) {
-        router.push(`${redirectTo}?room_id=${roomId}`);
+        const path =
+          redirectTo.includes(':room_id')
+            ? redirectTo.replace(':room_id', String(roomId))
+            : `${redirectTo}?room_id=${roomId}`;
+        router.push(path);
       } else {
         router.push(getRoomPath(roomType, roomId));
       }
